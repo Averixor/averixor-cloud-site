@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Averixor Cloud">
+  <defs>
+    <linearGradient id="bg" x1="14" y1="12" x2="112" y2="116" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#38bdf8"/>
+      <stop offset="1" stop-color="#0b1020"/>
+    </linearGradient>
+    <linearGradient id="cloud" x1="32" y1="42" x2="102" y2="91" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#bae6fd"/>
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="30" fill="url(#bg)"/>
+  <path fill="url(#cloud)" d="M43.8 91.6h43.9c12.5 0 22.6-9.2 22.6-20.5 0-10.4-8.5-19-19.5-20.3C86.7 40.5 76.3 33 64 33c-15 0-27.4 11-28.7 25.2C25.3 60.7 18 68.5 18 77.8c0 7.6 5.7 13.8 12.8 13.8h13Z"/>
+  <path fill="#0b1020" fill-opacity="0.9" d="M47 68.5a4.8 4.8 0 0 1 4.8-4.8h24.4a4.8 4.8 0 0 1 4.8 4.8v14.2a4.8 4.8 0 0 1-4.8 4.8H51.8a4.8 4.8 0 0 1-4.8-4.8V68.5Zm8.2-1.7v-5a8.8 8.8 0 1 1 17.6 0v5h-5.1v-5a3.7 3.7 0 0 0-7.4 0v5h-5.1Z"/>
+</svg>

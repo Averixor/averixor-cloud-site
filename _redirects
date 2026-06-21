@@ -1,0 +1,8 @@
+# Редіректи зі старих URL (зворотна сумісність)
+/files.html /pages/files.html 301
+/office.html /pages/office.html 301
+/collaboration.html /pages/collaboration.html 301
+/security.html /pages/security.html 301
+/start.html /pages/start.html 301
+/help.html /pages/help.html 301
+/workspace.html /workspace/ 301

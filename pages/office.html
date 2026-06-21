@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Документи й таблиці — Averixor Cloud</title>
+  <meta name="description" content="Офісні формати в Averixor Cloud: зберігання в Nextcloud, локальний демо-офіс у браузері. Nextcloud Office вимкнено." />
+  <link rel="canonical" href="https://averixor.xyz/pages/office.html" />
+  <meta name="theme-color" content="#0b1020" />
+  <link rel="icon" type="image/svg+xml" href="../assets/img/icons/favicon.svg" />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..900&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Перейти до основного вмісту</a>
+  <header class="site-header" data-header>
+    <div class="container header-inner">
+      <a class="brand" href="../index.html" aria-label="Averixor Cloud — на головну"><span class="brand-mark" aria-hidden="true">☁️</span><span class="brand-text">Averixor Cloud</span></a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-navigation" data-nav-toggle><span class="sr-only">Відкрити меню</span><span class="nav-toggle-line" aria-hidden="true"></span></button>
+      <nav id="site-navigation" class="site-nav" aria-label="Головна навігація" data-nav>
+        <ul class="nav-list">
+          <li class="is-active">
+            <button class="nav-dropdown-toggle" type="button" aria-expanded="false" data-dropdown-toggle aria-controls="nav-products">Можливості</button>
+            <ul id="nav-products" class="nav-dropdown">
+              <li><a href="files.html">Файли та сховище<small>Папки, синхронізація, обмін</small></a></li>
+              <li><a href="office.html" aria-current="page">Документи й таблиці<small>Формати та демо-офіс</small></a></li>
+              <li><a href="collaboration.html">Співпраця<small>Календар, контакти, команди</small></a></li>
+            </ul>
+          </li>
+          <li><a href="../workspace/">Демо-офіс</a></li>
+          <li><a href="security.html">Безпека</a></li>
+          <li><a href="start.html">Почати</a></li>
+          <li><a href="help.html">Допомога</a></li>
+        </ul>
+        <a class="nav-cta" href="https://cloud.averixor.xyz/index.php/login">Увійти</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="page-hero">
+      <div class="container">
+        <nav class="breadcrumbs" aria-label="Навігаційний ланцюжок">
+          <a href="../index.html">Головна</a><span aria-hidden="true">/</span><span aria-current="page">Документи</span>
+        </nav>
+        <div class="hero-badge-row"><span class="pill pill-office">📄 Формати</span><span class="pill">Nextcloud Office вимкнено</span></div>
+        <h1>Документи, таблиці та презентації</h1>
+        <p class="page-hero-lead">У хмарі Nextcloud ви зберігаєте й переглядаєте офісні файли. Онлайн-редагування в хмарі зараз недоступне. Для чернеток у браузері — окремий <a href="../workspace/">демо-офіс</a> (локально, без зв’язку з сервером).</p>
+        <div class="notice notice-info" role="note" style="margin-top:20px">
+          <span aria-hidden="true">ℹ️</span>
+          <p><strong>Чесно:</strong> Nextcloud Office (richdocuments / Collabora) вимкнено — ламав сервер. Це не повернення «як у Google Docs» у хмарі. Демо-офіс на сайті — інший інструмент: файли лише в вашому браузері.</p>
+        </div>
+        <div class="hero-actions" style="margin-top:20px">
+          <a class="button button-primary" href="https://cloud.averixor.xyz/index.php/login">Файли в Nextcloud</a>
+          <a class="button button-secondary" href="../workspace/">Демо-офіс (браузер)</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-pad">
+      <div class="container">
+        <div class="compare-table-wrap" style="margin-bottom:42px">
+          <table class="compare-table">
+            <thead>
+              <tr><th>Можливість</th><th>Nextcloud (хмара)</th><th>Демо-офіс (сайт)</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Зберігання файлів</td><td class="yes">Так</td><td class="yes">Лише в браузері</td></tr>
+              <tr><td>Синхронізація пристроїв</td><td class="yes">Так</td><td>Ні</td></tr>
+              <tr><td>Редагування DOCX/XLSX у хмарі</td><td>Ні (Office вимкнено)</td><td>Локально в демо-офісі</td></tr>
+              <tr><td>Перегляд PDF/зображень</td><td class="yes">Так</td><td class="yes">Так</td></tr>
+              <tr><td>Імпорт / експорт</td><td>Завантаження файлів</td><td>XLSX, DOCX, ZIP, HTML…</td></tr>
+              <tr><td>Зв’язок між ними</td><td colspan="2">Немає автоматичної синхронізації — експортуйте з демо-офісу й завантажте в хмару вручну</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="content-grid">
+          <div>
+            <article id="documents" class="content-block">
+              <h2>Текстові документи</h2>
+              <p>У Nextcloud — завантажуйте DOCX, ODT, TXT. У демо-офісі — створюйте та редагуйте чернетки, імпортуйте DOCX (базово), експортуйте HTML.</p>
+            </article>
+            <article id="tables" class="content-block">
+              <h2>Електронні таблиці</h2>
+              <p>У хмарі — зберігайте XLSX, ODS, CSV. У демо-офісі — повноцінне редагування таблиці в браузері з експортом у XLSX.</p>
+            </article>
+            <article id="presentations" class="content-block">
+              <h2>Презентації</h2>
+              <p>У хмарі — зберігання PPTX/ODP. У демо-офісі — простий редактор слайдів для чернеток.</p>
+            </article>
+            <article id="pdf" class="content-block">
+              <h2>PDF</h2>
+              <p>У хмарі — перегляд. У демо-офісі — перегляд і базове додавання тексту на сторінку.</p>
+            </article>
+          </div>
+          <aside class="content-sidebar">
+            <nav class="side-nav" aria-label="Зміст сторінки">
+              <a href="#documents" aria-current="true">Документи</a>
+              <a href="#tables">Таблиці</a>
+              <a href="#presentations">Презентації</a>
+              <a href="#pdf">PDF</a>
+            </nav>
+            <div class="quick-links">
+              <a href="../workspace/"><span aria-hidden="true">🖥️</span><strong>Демо-офіс</strong><small>Локально в браузері</small></a>
+              <a href="files.html"><span aria-hidden="true">📁</span><strong>Файли в хмарі</strong><small>Nextcloud</small></a>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer footer-mega">
+    <div class="container">
+      <div class="footer-mega-grid">
+        <div class="footer-col"><a class="brand footer-brand" href="../index.html"><span class="brand-mark" aria-hidden="true">☁️</span><span class="brand-text">Averixor Cloud</span></a><p>Приватна хмара на базі Nextcloud.</p></div>
+        <div class="footer-col"><h4>Можливості</h4><ul><li><a href="files.html">Файли</a></li><li><a href="office.html">Документи</a></li><li><a href="collaboration.html">Співпраця</a></li></ul></div>
+        <div class="footer-col"><h4>Сервіс</h4><ul><li><a href="start.html">Почати</a></li><li><a href="security.html">Безпека</a></li><li><a href="help.html">Допомога</a></li></ul></div>
+        <div class="footer-col"><h4>Доступ</h4><ul><li><a href="https://cloud.averixor.xyz/index.php/login">Вхід</a></li></ul></div>
+      </div>
+      <div class="footer-bottom"><p class="copyright">© <span id="year">2026</span> Averixor Cloud.</p></div>
+    </div>
+  </footer>
+  <script src="../assets/js/main.js" defer></script>
+</body>
+</html>
