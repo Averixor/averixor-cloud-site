@@ -38,40 +38,52 @@ site.webmanifest
 _headers, _redirects    # Cloudflare Pages
 ```
 
-**Правильно для GitHub:** `index.html` лежить у **корені репозиторію**, не в підпапці `averixor-cloud-site-production/`.
+Клонування:
+
+```bash
+git clone https://github.com/Averixor/averixor-cloud-site.git
+cd averixor-cloud-site
+```
 
 ---
 
 ## Деплой: GitHub → Cloudflare Pages
 
-### 1. Створити репозиторій на GitHub
+**Репозиторій:** https://github.com/Averixor/averixor-cloud-site  
+**Гілка production:** `main` (захищена — обов’язковий E2E CI)
 
-```bash
-cd averixor-cloud-site-production   # каталог з index.html у корені
-git init
-git add .
-git commit -m "Averixor Cloud production site"
-git branch -M main
-git remote add origin https://github.com/YOUR_USER/averixor-cloud-site.git
-git push -u origin main
-```
+### Налаштування Pages (статичний сайт, без збірки)
 
-### 2. Cloudflare Pages
+| Параметр | Значення |
+|----------|----------|
+| Production branch | `main` |
+| Framework preset | None / Custom |
+| Build command | *(порожньо)* |
+| Build output directory | `.` або `/` |
+| Environment variables | не потрібні |
 
-1. [Cloudflare Dashboard](https://dash.cloudflare.com) → **Workers & Pages** → **Create** → **Pages** → **Connect to Git**
-2. Обрати репозиторій, гілку `main`
-3. **Build command:** *(порожньо)*
-4. **Build output directory:** `/`
-5. **Deploy**
+### Dashboard
 
-### 3. Домен
+1. [Cloudflare Dashboard](https://dash.cloudflare.com) → **Workers & Pages** → **Create** → **Connect to Git**
+2. Репозиторій: `Averixor/averixor-cloud-site`, гілка `main`
+3. Build command — **порожньо**, output — **корінь репозиторію**
+4. Після деплою: **Custom domains** → `averixor.xyz` (або автоматично з `CNAME`)
+5. **Preview deployments** — увімкнено для PR; production лише з `main`
 
-1. Pages → проєкт → **Custom domains** → `averixor.xyz`
-2. DNS: CNAME `averixor.xyz` → `your-project.pages.dev` (або використати файл `CNAME` при GitHub Pages)
+### Що підхоплюється автоматично
 
-### 4. Nextcloud окремо
+- `_headers` — security headers + CSP для `/workspace/*`
+- `_redirects` — редіректи зі старих URL
+- `CNAME` — `averixor.xyz`
 
-`cloud.averixor.xyz` — окремий сервер Nextcloud, не цей репозиторій.
+### URL після деплою
+
+- `https://<project>.pages.dev`
+- `https://averixor.xyz`
+
+### Nextcloud (окремо)
+
+`cloud.averixor.xyz` — окремий VPS Nextcloud, не цей репозиторій.
 
 ---
 
