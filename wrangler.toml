@@ -1,0 +1,10 @@
+# Cloudflare Pages — лише вміст dist/ після npm run build.
+# НЕ вказуйте output directory = "." (корінь репо) — інакше Wrangler
+# спробує залити node_modules і деплой впаде (Asset too large).
+
+name = "averixor-cloud-site"
+compatibility_date = "2026-06-21"
+pages_build_output_dir = "dist"
+
+[build]
+command = "npm run build"

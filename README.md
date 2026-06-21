@@ -75,18 +75,26 @@ npm run verify   # перевірка структури
 | Параметр | Значення |
 |----------|----------|
 | Production branch | `main` |
-| Framework preset | None / Custom |
+| Framework preset | **None** (не Workers, не Wrangler static з output `.`) |
 | **Build command** | `npm run build` |
-| **Build output directory** | `dist` |
+| **Build output directory** | **`dist`** (не `.` і не `/`) |
+| **Deploy command** | *(порожньо — не `wrangler deploy`)* |
 | Environment variables | не потрібні |
+
+> **Помилка `Asset too large … node_modules/workerd`?**  
+> Cloudflare намагається залити **весь репозиторій** (output = `.`).  
+> У Dashboard → Settings → Builds: output має бути **`dist`**, deploy command — **порожній**.  
+> У репо є `wrangler.toml` з `pages_build_output_dir = "dist"`.
 
 ### Dashboard
 
-1. [Cloudflare Dashboard](https://dash.cloudflare.com) → **Workers & Pages** → **Connect to Git**
+1. [Cloudflare Dashboard](https://dash.cloudflare.com) → **Workers & Pages** → **Create** → **Pages** → **Connect to Git**
 2. Репозиторій: `Averixor/averixor-cloud-site`, гілка `main`
-3. Build: `npm run build`, output: **`dist`**
+3. Build: `npm run build`, output: **`dist`**, deploy command — **не заповнювати**
 4. **Custom domains** → `averixor.xyz`
 5. Preview deployments для PR; production лише з `main`
+
+Якщо проєкт уже створено як Worker з `wrangler deploy` і `assets.directory = "."` — краще **новий Pages-проєкт** з налаштуваннями вище, або в Settings виправити output на `dist` і прибрати deploy command.
 
 ### Що потрапляє на сайт (`dist/`)
 

@@ -27,3 +27,7 @@ Thumbs.db
 
 # Cursor (local IDE state)
 .cursor/
+
+# Wrangler (local deploy cache)
+.wrangler/
+.dev.vars
