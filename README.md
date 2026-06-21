@@ -47,54 +47,74 @@ cd averixor-cloud-site
 
 ---
 
-## Деплой: GitHub → Cloudflare Pages
+## GitHub vs Cloudflare Pages
+
+| | GitHub (репозиторій) | Cloudflare Pages (сайт) |
+|---|---|---|
+| Призначення | Розробка, тести, CI, історія | Публічний `averixor.xyz` |
+| Вміст | Увесь проєкт (крім `.gitignore`) | Лише `dist/` після `npm run build` |
+| `tests/`, `package.json` | Так | Ні |
+| `node_modules/` | Локально, не в git | Ні |
+
+Збірка production (тільки статика для сайту):
+
+```bash
+npm run build    # → dist/
+npm run verify   # перевірка структури
+```
+
+---
+
+## Деплой: Cloudflare Pages
 
 **Репозиторій:** https://github.com/Averixor/averixor-cloud-site  
-**Гілка production:** `main` (захищена — обов’язковий E2E CI)
+**Гілка production:** `main` (E2E CI обов’язковий)
 
-### Налаштування Pages (статичний сайт, без збірки)
+### Налаштування Pages
 
 | Параметр | Значення |
 |----------|----------|
 | Production branch | `main` |
 | Framework preset | None / Custom |
-| Build command | *(порожньо)* |
-| Build output directory | `.` або `/` |
+| **Build command** | `npm run build` |
+| **Build output directory** | `dist` |
 | Environment variables | не потрібні |
 
 ### Dashboard
 
-1. [Cloudflare Dashboard](https://dash.cloudflare.com) → **Workers & Pages** → **Create** → **Connect to Git**
+1. [Cloudflare Dashboard](https://dash.cloudflare.com) → **Workers & Pages** → **Connect to Git**
 2. Репозиторій: `Averixor/averixor-cloud-site`, гілка `main`
-3. Build command — **порожньо**, output — **корінь репозиторію**
-4. Після деплою: **Custom domains** → `averixor.xyz` (або автоматично з `CNAME`)
-5. **Preview deployments** — увімкнено для PR; production лише з `main`
+3. Build: `npm run build`, output: **`dist`**
+4. **Custom domains** → `averixor.xyz`
+5. Preview deployments для PR; production лише з `main`
 
-### Що підхоплюється автоматично
+### Що потрапляє на сайт (`dist/`)
 
-- `_headers` — security headers + CSP для `/workspace/*`
-- `_redirects` — редіректи зі старих URL
-- `CNAME` — `averixor.xyz`
+`index.html`, `pages/`, `workspace/`, `assets/`, `robots.txt`, `sitemap.xml`, `site.webmanifest`, `CNAME`, `_headers`, `_redirects`, `.nojekyll`, `README.md`, `LICENSE`, `docs/OPERATIONS.md`
 
-### URL після деплою
+**Не потрапляє:** `tests/`, `node_modules/`, `package.json`, `.env*`, Playwright-артефакти.
 
-- `https://<project>.pages.dev`
-- `https://averixor.xyz`
+### Домени
 
-### Nextcloud (окремо)
-
-`cloud.averixor.xyz` — окремий VPS Nextcloud, не цей репозиторій.
+- `averixor.xyz` → цей статичний сайт (Cloudflare Pages)
+- `cloud.averixor.xyz` → **окремий Nextcloud** (не чіпати, не деплоїти з цього репо)
 
 ---
 
 ## Локальний запуск
 
+**Розробка** (усі файли):
+
 ```bash
 python3 -m http.server 8080
 ```
 
-- `http://localhost:8080/` — сайт
-- `http://localhost:8080/workspace/` — демо-офіс
+**Production-збірка** (як на Cloudflare):
+
+```bash
+npm run build
+python3 -m http.server 8080 --directory dist
+```
 
 ---
 

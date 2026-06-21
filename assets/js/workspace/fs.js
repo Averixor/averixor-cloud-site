@@ -496,7 +496,7 @@
         kind: 'document',
         mime: MIME.document,
         content: JSON.stringify({
-          html: '<h1>Ласкаво просимо</h1><p>Це <strong>локальний демо-офіс</strong> у браузері — не Nextcloud.</p><ul><li>Файли зберігаються в IndexedDB цього пристрою</li><li>Можна імпортувати DOCX, XLSX, PDF, ZIP</li><li>Щоб зберегти в хмару — експортуйте файл і завантажте на <a href="https://cloud.averixor.xyz/index.php/login">cloud.averixor.xyz</a></li></ul>',
+          html: '<h1>Ласкаво просимо</h1><p>Це <strong>локальний демо-офіс</strong> у браузері — не Nextcloud.</p><ul><li>Файли зберігаються в IndexedDB цього пристрою</li><li>Можна імпортувати DOCX, XLSX, PDF, ZIP</li><li>Щоб зберегти в хмару — експортуйте файл і завантажте на <a href="https://cloud.averixor.xyz/login">cloud.averixor.xyz</a></li></ul>',
         }),
       });
 

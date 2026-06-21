@@ -14,7 +14,7 @@ module.exports = defineConfig({
     trace: 'on-first-retry',
   },
   webServer: {
-    command: 'python3 -m http.server 8765',
+    command: 'npm run build && python3 -m http.server 8765 --directory dist',
     url: 'http://127.0.0.1:8765/workspace/',
     reuseExistingServer: !process.env.CI,
     timeout: 30_000,

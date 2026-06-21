@@ -2,6 +2,8 @@
   "name": "averixor-cloud-site",
   "private": true,
   "scripts": {
+    "build": "bash scripts/build-production.sh",
+    "verify": "bash scripts/verify-site.sh",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui"
   },
