@@ -112,6 +112,28 @@ body.workspace-body {
   display: none !important;
 }
 
+.ws-error-alert {
+  grid-column: 1 / -1;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.45);
+  color: #fecaca;
+  font-size: 0.92rem;
+}
+
+.ws-error-alert[hidden] {
+  display: none !important;
+}
+
+.ws-tree-empty {
+  margin: 12px 0 0;
+  padding: 10px;
+  font-size: 0.88rem;
+  color: var(--text-muted, #94a3b8);
+  line-height: 1.45;
+}
+
 .ws-modal {
   position: fixed;
   inset: 0;

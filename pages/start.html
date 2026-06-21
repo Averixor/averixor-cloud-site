@@ -5,6 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Як почати — Averixor Cloud</title>
   <meta name="description" content="Покрокова інструкція реєстрації та першого входу в Averixor Cloud." />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="uk_UA" />
+  <meta property="og:site_name" content="Averixor Cloud" />
+  <meta property="og:url" content="https://averixor.xyz/pages/start.html" />
+  <meta property="og:title" content="Як почати — Averixor Cloud" />
+  <meta property="og:description" content="Покрокова інструкція реєстрації та першого входу в Averixor Cloud." />
+  <meta property="og:image" content="https://averixor.xyz/assets/img/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Як почати — Averixor Cloud" />
+  <meta name="twitter:description" content="Покрокова інструкція реєстрації та першого входу в Averixor Cloud." />
+  <meta name="twitter:image" content="https://averixor.xyz/assets/img/og-image.png" />
+  <link rel="manifest" href="../site.webmanifest" />
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/img/icons/apple-touch-icon.png" />
   <link rel="canonical" href="https://averixor.xyz/pages/start.html" />
   <meta name="theme-color" content="#0b1020" />
   <link rel="icon" type="image/svg+xml" href="../assets/img/icons/favicon.svg" />
@@ -60,7 +73,7 @@
             <li><span>01</span><div><h3>Відкрийте форму реєстрації</h3><p>Перейдіть на <a href="https://cloud.averixor.xyz/index.php/apps/registration/">сторінку реєстрації</a> і вкажіть дійсну електронну адресу.</p></div></li>
             <li><span>02</span><div><h3>Підтвердіть пошту</h3><p>Відкрийте лист підтвердження. Якщо його немає — перевірте «Спам», «Небажані» та «Промоакції».</p></div></li>
             <li><span>03</span><div><h3>Увійдіть у хмару</h3><p>Відкрийте <a href="https://cloud.averixor.xyz/login">сторінку входу</a> і авторизуйтеся.</p></div></li>
-            <li><span>04</span><div><h3>Завантажте перші файли</h3><p>Створіть папки, завантажте документи або таблиці. Спробуйте відкрити офісний файл у браузері.</p></div></li>
+            <li><span>04</span><div><h3>Завантажте перші файли</h3><p>Створіть папки, завантажте документи. PDF і зображення можна переглянути в браузері. Редагування офісних файлів — у <a href="../workspace/">демо-офісі</a> (локально) або на комп’ютері.</p></div></li>
             <li><span>05</span><div><h3>Підключіть клієнт (за бажанням)</h3><p>Встановіть <a href="https://nextcloud.com/install/#install-clients" rel="noopener noreferrer">Nextcloud Desktop</a> або мобільний застосунок для синхронізації.</p></div></li>
           </ol>
         </div>
@@ -71,7 +84,7 @@
           </div>
           <div class="quick-links" style="margin-top:18px">
             <a href="files.html"><span aria-hidden="true">📁</span><strong>Файли</strong><small>Що робити після входу</small></a>
-            <a href="office.html"><span aria-hidden="true">📄</span><strong>Документи</strong><small>Редагування в браузері</small></a>
+            <a href="office.html"><span aria-hidden="true">📄</span><strong>Документи</strong><small>Демо-офіс (локально)</small></a>
             <a href="help.html"><span aria-hidden="true">❓</span><strong>Допомога</strong><small>Якщо щось не працює</small></a>
           </div>
         </aside>
@@ -94,12 +107,47 @@
   <footer class="site-footer footer-mega">
     <div class="container">
       <div class="footer-mega-grid">
-        <div class="footer-col"><a class="brand footer-brand" href="../index.html"><span class="brand-mark" aria-hidden="true">☁️</span><span class="brand-text">Averixor Cloud</span></a><p>Приватна офісна хмара на базі Nextcloud.</p></div>
-        <div class="footer-col"><h4>Можливості</h4><ul><li><a href="files.html">Файли</a></li><li><a href="office.html">Документи</a></li><li><a href="collaboration.html">Співпраця</a></li></ul></div>
-        <div class="footer-col"><h4>Сервіс</h4><ul><li><a href="start.html">Почати</a></li><li><a href="security.html">Безпека</a></li><li><a href="help.html">Допомога</a></li></ul></div>
-        <div class="footer-col"><h4>Доступ</h4><ul><li><a href="https://cloud.averixor.xyz/login">Вхід</a></li></ul></div>
+        <div class="footer-col">
+          <a class="brand footer-brand" href="../index.html" aria-label="Averixor Cloud — на головну">
+            <span class="brand-mark" aria-hidden="true">☁️</span>
+            <span class="brand-text">Averixor Cloud</span>
+          </a>
+          <p>Приватна офісна хмара на базі Nextcloud: файли, документи, таблиці та співпраця.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Можливості</h4>
+          <ul>
+            <li><a href="files.html">Файли та сховище</a></li>
+            <li><a href="office.html">Документи й таблиці</a></li>
+            <li><a href="collaboration.html">Співпраця</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Сервіс</h4>
+          <ul>
+            <li><a href="../workspace/">Демо-офіс</a></li>
+            <li><a href="start.html">Як почати</a></li>
+            <li><a href="security.html">Безпека</a></li>
+            <li><a href="privacy.html">Конфіденційність</a></li>
+            <li><a href="terms.html">Угода</a></li>
+            <li><a href="help.html">Допомога</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Доступ</h4>
+          <ul>
+            <li><a href="https://cloud.averixor.xyz/login">Вхід у хмару</a></li>
+            <li><a href="https://cloud.averixor.xyz/index.php/apps/registration/">Реєстрація</a></li>
+          </ul>
+        </div>
       </div>
-      <div class="footer-bottom"><p class="copyright">© <span id="year">2026</span> Averixor Cloud.</p></div>
+      <div class="footer-bottom">
+        <p class="copyright">© <span id="year">2026</span> Averixor Cloud.</p>
+        <nav class="footer-nav" aria-label="Нижня навігація">
+          <a href="#main">Нагору</a>
+          <a href="https://nextcloud.com" rel="noopener noreferrer">Nextcloud</a>
+        </nav>
+      </div>
     </div>
   </footer>
   <script src="../assets/js/main.js" defer></script>

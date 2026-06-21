@@ -44,6 +44,15 @@ if ! grep -q 'cloud.averixor.xyz/login' "$DIST/index.html"; then
   echo "WARN: index.html login URL check (cloud.averixor.xyz/login)" >&2
 fi
 
+for asset in assets/img/og-image.png assets/img/icons/apple-touch-icon.png assets/img/icons/icon-192.png assets/img/icons/icon-512.png assets/img/icons/favicon.svg; do
+  check "$asset"
+done
+
+if grep -q 'averixor.xyz/workspace/' "$DIST/sitemap.xml" 2>/dev/null; then
+  echo "ERROR: workspace/ must not be in sitemap (noindex page)" >&2
+  fail=1
+fi
+
 if [ "$fail" -eq 0 ]; then
   echo "OK: verify-site passed for $DIST"
 else

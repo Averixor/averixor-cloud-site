@@ -205,25 +205,40 @@
       const salt = WorkspaceCrypto.randomSalt();
       const key = await WorkspaceCrypto.deriveKey(password, salt, kdf);
       const verifier = await WorkspaceCrypto.createVerifier(key);
-      this.encryptionKey = key;
-      this.encryptionEnabled = true;
       const records = await this.listAllRecordsRaw();
+      const encryptedRecords = [];
       for (const rec of records) {
         if (rec.content == null) continue;
         let plain = rec.content;
         if (WorkspaceCrypto.isEncryptedContent(rec.content)) {
           plain = await WorkspaceCrypto.unwrapContent(key, rec.content);
         }
-        const encrypted = { ...rec, content: await WorkspaceCrypto.wrapContent(key, plain) };
-        await this.putRaw(encrypted);
+        encryptedRecords.push({
+          ...rec,
+          content: await WorkspaceCrypto.wrapContent(key, plain),
+        });
       }
-      await this.setMeta('encryption', {
+      const metaValue = {
         enabled: true,
         salt: WorkspaceCrypto.b64(salt),
         kdf,
         verifier,
         enabledAt: Date.now(),
+      };
+      await new Promise((resolve, reject) => {
+        const tx = this.db.transaction([STORE, META], 'readwrite');
+        const fileStore = tx.objectStore(STORE);
+        const metaStore = tx.objectStore(META);
+        for (const rec of encryptedRecords) {
+          fileStore.put(rec);
+        }
+        metaStore.put({ key: 'encryption', value: metaValue });
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject(tx.error || new Error('Помилка шифрування'));
+        tx.onabort = () => reject(tx.error || new Error('Шифрування скасовано'));
       });
+      this.encryptionKey = key;
+      this.encryptionEnabled = true;
       return true;
     }
 
@@ -264,10 +279,14 @@
         result = { mode, added: toAdd.length, skipped: records.length - toAdd.length, total: records.length };
 
         await new Promise((resolve, reject) => {
-          const tx = this.db.transaction(STORE, 'readwrite');
+          const tx = this.db.transaction([STORE, META], 'readwrite');
           const fileStore = tx.objectStore(STORE);
+          const metaStore = tx.objectStore(META);
           for (const rec of toAdd) {
             fileStore.put(rec);
+          }
+          if (manifest.meta && manifest.meta.encryption) {
+            metaStore.put({ key: 'encryption', value: manifest.meta.encryption });
           }
           tx.oncomplete = () => resolve();
           tx.onerror = () => reject(tx.error || new Error('Помилка merge-відновлення'));

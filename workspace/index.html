@@ -28,17 +28,17 @@
       </a>
       <div class="ws-toolbar-actions">
         <input type="text" class="ws-file-name" id="ws-file-name" placeholder="Назва файлу" aria-label="Назва файлу" />
-        <button type="button" class="button button-primary" id="ws-save">💾 Зберегти</button>
-        <button type="button" class="button button-secondary" id="ws-export">⬇️ Експорт</button>
-        <button type="button" class="button button-secondary" id="ws-export-all" title="Незашифрований ZIP (демо)">📦 Усе в ZIP</button>
-        <button type="button" class="button button-secondary" id="ws-encrypted-backup" title="Argon2id + AES-256-GCM">🔐 Бэкап</button>
-        <button type="button" class="button button-secondary" id="ws-restore" title="Відновити з .averixor-backup">♻️ Відновити</button>
-        <button type="button" class="button button-secondary" id="ws-encrypt" title="Шифрування IndexedDB на пристрої">🔒 Сховище</button>
-        <button type="button" class="button button-secondary" id="ws-import">📥 Імпорт</button>
-        <button type="button" class="button button-secondary" id="ws-delete" title="Видалити файл">🗑️</button>
-        <span class="ws-status" id="ws-status">Завантаження…</span>
+        <button type="button" class="button button-primary" id="ws-save" aria-label="Зберегти файл">💾 Зберегти</button>
+        <button type="button" class="button button-secondary" id="ws-export" aria-label="Експортувати файл">⬇️ Експорт</button>
+        <button type="button" class="button button-secondary" id="ws-export-all" title="Незашифрований ZIP (демо)" aria-label="Експорт усіх файлів у ZIP">📦 Усе в ZIP</button>
+        <button type="button" class="button button-secondary" id="ws-encrypted-backup" title="Argon2id + AES-256-GCM" aria-label="Зашифрована резервна копія">🔐 Резервна копія</button>
+        <button type="button" class="button button-secondary" id="ws-restore" title="Відновити з .averixor-backup" aria-label="Відновити з резервної копії">♻️ Відновити</button>
+        <button type="button" class="button button-secondary" id="ws-encrypt" title="Шифрування IndexedDB на пристрої" aria-label="Шифрування сховища">🔒 Сховище</button>
+        <button type="button" class="button button-secondary" id="ws-import" aria-label="Імпорт файлів">📥 Імпорт</button>
+        <button type="button" class="button button-secondary" id="ws-delete" title="Видалити файл" aria-label="Видалити файл">🗑️</button>
+        <span class="ws-status" id="ws-status" role="status" aria-live="polite">Завантаження…</span>
       </div>
-      <a class="nav-cta" href="https://cloud.averixor.xyz/login">Хмара Nextcloud</a>
+      <a class="nav-cta" href="https://cloud.averixor.xyz/login">Відкрити хмару ↗</a>
     </header>
 
     <div class="ws-layout">
@@ -47,10 +47,11 @@
       </div>
       <div class="ws-backup-banner" id="ws-backup-banner" hidden role="alert">
         <span>⚠️ Зробіть резервну копію — без неї файли зникнуть при очищенні кешу.</span>
-        <button type="button" class="button button-primary" id="ws-backup-now">🔐 Зашифрований бэкап</button>
+        <button type="button" class="button button-primary" id="ws-backup-now">🔐 Зашифрована копія</button>
         <button type="button" class="button button-secondary" id="ws-backup-plain">📦 ZIP (демо)</button>
-        <button type="button" class="button button-secondary" id="ws-backup-dismiss">Пізніше</button>
+        <button type="button" class="button button-secondary" id="ws-backup-dismiss">Нагадати пізніше</button>
       </div>
+      <div class="ws-error-alert" id="ws-error-alert" hidden role="alert"></div>
       <aside class="ws-sidebar" aria-label="Файли">
         <div>
           <h2 id="ws-tree-title">Локальні файли</h2>
@@ -78,7 +79,7 @@
     </div>
   </div>
 
-  <input type="file" class="ws-hidden-input" id="ws-file-input" multiple accept=".doc,.docx,.odt,.xls,.xlsx,.ods,.csv,.ppt,.pptx,.odp,.pdf,.zip,.txt,.md,.png,.jpg,.jpeg,.gif,.webp,.json,.xml,.rtf" />
+  <input type="file" class="ws-hidden-input" id="ws-file-input" multiple accept=".doc,.docx,.odt,.xls,.xlsx,.ods,.csv,.pdf,.zip,.txt,.md,.png,.jpg,.jpeg,.gif,.webp,.json,.xml,.rtf" />
   <input type="file" class="ws-hidden-input" id="ws-restore-input" accept=".averixor-backup,application/octet-stream" />
 
   <div class="ws-modal" id="ws-restore-modal" hidden role="dialog" aria-labelledby="ws-restore-title" aria-modal="true">
@@ -86,12 +87,13 @@
     <div class="ws-modal-panel">
       <h2 id="ws-restore-title">Відновлення workspace</h2>
       <div id="ws-restore-step-file">
-        <p>Оберіть файл <code>.averixor-backup</code>. Для зашифрованого бэкапу пароль запитаємо <strong>до</strong> розпакування.</p>
+        <p>Оберіть файл <code>.averixor-backup</code>. Для зашифрованої копії пароль запитаємо <strong>до</strong> розпакування.</p>
         <button type="button" class="button button-primary" id="ws-restore-pick">Обрати файл</button>
       </div>
       <div id="ws-restore-step-password" hidden>
-        <p>Зашифрований бэкап. Введіть пароль:</p>
-        <input type="password" class="ws-restore-password" id="ws-restore-password" minlength="8" autocomplete="current-password" placeholder="Пароль бэкапу" />
+        <p>Зашифрована резервна копія. Введіть пароль:</p>
+        <label class="sr-only" for="ws-restore-password">Пароль резервної копії</label>
+        <input type="password" class="ws-restore-password" id="ws-restore-password" minlength="8" autocomplete="current-password" placeholder="Пароль резервної копії" />
         <button type="button" class="button button-primary" id="ws-restore-password-next">Далі</button>
       </div>
       <div id="ws-restore-step-confirm" hidden>

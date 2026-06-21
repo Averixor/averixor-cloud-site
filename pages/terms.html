@@ -1,13 +1,22 @@
 <!doctype html>
-<html lang="uk">
+<html lang="uk" prefix="og: https://ogp.me/ns#">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Користувацька угода — Averixor Cloud</title>
   <meta name="description" content="Умови використання сайту Averixor Cloud та демо-офісу." />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="uk_UA" />
+  <meta property="og:site_name" content="Averixor Cloud" />
+  <meta property="og:url" content="https://averixor.xyz/pages/terms.html" />
+  <meta property="og:title" content="Користувацька угода — Averixor Cloud" />
+  <meta property="og:description" content="Умови використання сайту Averixor Cloud та демо-офісу." />
+  <meta property="og:image" content="https://averixor.xyz/assets/img/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
   <link rel="canonical" href="https://averixor.xyz/pages/terms.html" />
   <meta name="theme-color" content="#0b1020" />
   <link rel="icon" type="image/svg+xml" href="../assets/img/icons/favicon.svg" />
+  <link rel="manifest" href="../site.webmanifest" />
   <link rel="stylesheet" href="../assets/css/main.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -17,14 +26,24 @@
   <a class="skip-link" href="#main">Перейти до основного вмісту</a>
   <header class="site-header" data-header>
     <div class="container header-inner">
-      <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true">☁️</span><span class="brand-text">Averixor Cloud</span></a>
-      <nav id="site-navigation" class="site-nav" data-nav>
+      <a class="brand" href="../index.html" aria-label="Averixor Cloud — на головну"><span class="brand-mark" aria-hidden="true">☁️</span><span class="brand-text">Averixor Cloud</span></a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-navigation" data-nav-toggle><span class="sr-only">Відкрити меню</span><span class="nav-toggle-line" aria-hidden="true"></span></button>
+      <nav id="site-navigation" class="site-nav" aria-label="Головна навігація" data-nav>
         <ul class="nav-list">
-          <li><a href="privacy.html">Конфіденційність</a></li>
-          <li><a href="terms.html" aria-current="page">Угода</a></li>
+          <li>
+            <button class="nav-dropdown-toggle" type="button" aria-expanded="false" data-dropdown-toggle aria-controls="nav-products">Можливості</button>
+            <ul id="nav-products" class="nav-dropdown">
+              <li><a href="files.html">Файли та сховище<small>Папки, синхронізація, обмін</small></a></li>
+              <li><a href="office.html">Документи й таблиці<small>Тексти, електронні таблиці, PDF</small></a></li>
+              <li><a href="collaboration.html">Співпраця<small>Календар, контакти, команди</small></a></li>
+            </ul>
+          </li>
+          <li><a href="../workspace/">Демо-офіс</a></li>
+          <li><a href="security.html">Безпека</a></li>
+          <li><a href="start.html">Почати</a></li>
           <li><a href="help.html">Допомога</a></li>
         </ul>
-        <a class="nav-cta" href="https://cloud.averixor.xyz/login">Увійти</a>
+        <a class="nav-cta" href="https://cloud.averixor.xyz/login">Увійти в хмару</a>
       </nav>
     </div>
   </header>
@@ -32,6 +51,9 @@
   <main id="main">
     <section class="page-hero">
       <div class="container">
+        <nav class="breadcrumbs" aria-label="Навігаційний ланцюжок">
+          <a href="../index.html">Головна</a><span aria-hidden="true">/</span><span aria-current="page">Угода</span>
+        </nav>
         <h1>Користувацька угода</h1>
         <p class="page-hero-lead">Останнє оновлення: 21 червня 2026.</p>
       </div>
@@ -44,7 +66,7 @@
         </article>
         <article class="content-block">
           <h2>2. Демо-офіс «як є»</h2>
-          <p>Локальний workspace надається без гарантій збереження даних. Ви відповідаєте за резервні копії (ZIP) та безпеку пристрою.</p>
+          <p>Локальний демо-офіс надається без гарантій збереження даних. Ви відповідаєте за резервні копії та безпеку пристрою.</p>
         </article>
         <article class="content-block">
           <h2>3. Nextcloud</h2>
@@ -63,7 +85,48 @@
   </main>
   <footer class="site-footer footer-mega">
     <div class="container">
-      <div class="footer-bottom"><p class="copyright">© <span id="year">2026</span> Averixor Cloud · <a href="privacy.html">Конфіденційність</a></p></div>
+      <div class="footer-mega-grid">
+        <div class="footer-col">
+          <a class="brand footer-brand" href="../index.html" aria-label="Averixor Cloud — на головну">
+            <span class="brand-mark" aria-hidden="true">☁️</span>
+            <span class="brand-text">Averixor Cloud</span>
+          </a>
+          <p>Приватна офісна хмара на базі Nextcloud: файли, документи, таблиці та співпраця.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Можливості</h4>
+          <ul>
+            <li><a href="files.html">Файли та сховище</a></li>
+            <li><a href="office.html">Документи й таблиці</a></li>
+            <li><a href="collaboration.html">Співпраця</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Сервіс</h4>
+          <ul>
+            <li><a href="../workspace/">Демо-офіс</a></li>
+            <li><a href="start.html">Як почати</a></li>
+            <li><a href="security.html">Безпека</a></li>
+            <li><a href="privacy.html">Конфіденційність</a></li>
+            <li><a href="terms.html">Угода</a></li>
+            <li><a href="help.html">Допомога</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Доступ</h4>
+          <ul>
+            <li><a href="https://cloud.averixor.xyz/login">Вхід у хмару</a></li>
+            <li><a href="https://cloud.averixor.xyz/index.php/apps/registration/">Реєстрація</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="copyright">© <span id="year">2026</span> Averixor Cloud.</p>
+        <nav class="footer-nav" aria-label="Нижня навігація">
+          <a href="#main">Нагору</a>
+          <a href="https://nextcloud.com" rel="noopener noreferrer">Nextcloud</a>
+        </nav>
+      </div>
     </div>
   </footer>
   <script src="../assets/js/main.js" defer></script>

@@ -46,6 +46,7 @@
 
     load(content) {
       if (!this.quill) return;
+      const sanitize = window.WorkspaceSecurity?.sanitizeHtml || ((html) => html);
       try {
         const parsed = typeof content === 'string' ? JSON.parse(content) : content;
         if (parsed.delta) {
@@ -53,12 +54,12 @@
           return;
         }
         if (parsed.html) {
-          this.quill.root.innerHTML = parsed.html;
+          this.quill.root.innerHTML = sanitize(parsed.html);
           return;
         }
       } catch {
         if (typeof content === 'string' && content.trim().startsWith('<')) {
-          this.quill.root.innerHTML = content;
+          this.quill.root.innerHTML = sanitize(content);
           return;
         }
       }

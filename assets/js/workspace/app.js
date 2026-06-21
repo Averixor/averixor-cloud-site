@@ -20,7 +20,10 @@
   };
 
   const BACKUP_KEY = 'averixor-ws-last-backup';
+  const BACKUP_SNOOZE_KEY = 'averixor-ws-backup-snooze';
   const BACKUP_INTERVAL_MS = 7 * 24 * 60 * 60 * 1000;
+  const BACKUP_SNOOZE_MS = 24 * 60 * 60 * 1000;
+  let onWsDirty = null;
 
   function markBackupDone() {
     try { localStorage.setItem(BACKUP_KEY, String(Date.now())); } catch { /* empty */ }
@@ -32,14 +35,28 @@
     if (el) el.hidden = true;
   }
 
+  function snoozeBackupBanner() {
+    try { localStorage.setItem(BACKUP_SNOOZE_KEY, String(Date.now())); } catch { /* empty */ }
+    hideBackupBanner();
+  }
+
   function checkBackupReminder() {
     const el = $('ws-backup-banner');
     if (!el) return;
+    let snooze = 0;
+    try { snooze = Number(localStorage.getItem(BACKUP_SNOOZE_KEY) || 0); } catch { /* empty */ }
+    if (snooze && Date.now() - snooze < BACKUP_SNOOZE_MS) return;
     let last = 0;
     try { last = Number(localStorage.getItem(BACKUP_KEY) || 0); } catch { /* empty */ }
     if (!last || Date.now() - last > BACKUP_INTERVAL_MS) {
       el.hidden = false;
     }
+  }
+
+  function safeAsync(fn) {
+    return (...args) => {
+      Promise.resolve(fn(...args)).catch((err) => reportError('action', err));
+    };
   }
 
   async function promptPassword(message) {
@@ -63,7 +80,7 @@
     if (!pw1) return;
     const pw2 = window.prompt('Повторіть пароль:');
     if (pw1 !== pw2) throw new Error('Паролі не збігаються');
-    if (!confirm('Увімкнути шифрування всіх локальних файлів? Спочатку зробіть «🔐 Бэкап».')) return;
+    if (!confirm('Увімкнути шифрування всіх локальних файлів? Спочатку зробіть резервну копію (🔐).')) return;
     setStatus('Шифрування…');
     await state.fs.enableEncryption(pw1);
     setStatus('Шифрування увімкнено');
@@ -73,18 +90,18 @@
     try {
       await ensureUnlocked();
       if (state.dirty && state.activeTab) await saveCurrent();
-      const pw1 = await promptPassword('Пароль зашифрованого бэкапу (мін. 8 символів):');
+      const pw1 = await promptPassword('Пароль зашифрованої резервної копії (мін. 8 символів):');
       if (!pw1) return;
-      const pw2 = window.prompt('Повторіть пароль бэкапу:');
+      const pw2 = window.prompt('Повторіть пароль резервної копії:');
       if (pw1 !== pw2) throw new Error('Паролі не збігаються');
-      setStatus('Створення бэкапу Argon2id + AES-256-GCM…');
+      setStatus('Створення резервної копії Argon2id + AES-256-GCM…');
       const manifestPreview = await window.WorkspaceBackup.buildManifest(state.fs);
       const jsonSize = new TextEncoder().encode(JSON.stringify(manifestPreview)).byteLength;
       const sizeMb = (jsonSize / 1024 / 1024).toFixed(2);
       const limitMb = Math.round(window.WorkspaceSecurity.LIMITS.maxBackupBytes / 1024 / 1024);
       if (!confirm(
-        `Розмір бэкапу: ~${sizeMb} МБ (${manifestPreview.recordCount} записів).\n`
-        + `Ліміт: ${limitMb} МБ.\n\nПродовжити створення зашифрованого бэкапу?`,
+        `Розмір резервної копії: ~${sizeMb} МБ (${manifestPreview.recordCount} записів).\n`
+        + `Ліміт: ${limitMb} МБ.\n\nПродовжити створення зашифрованої резервної копії?`,
       )) return;
       const suggested = window.WorkspaceCrypto.suggestArgon2Profile();
       const useFast = confirm(
@@ -102,7 +119,7 @@
       const stamp = new Date().toISOString().slice(0, 10);
       saveAs(blob, `averixor-backup-${stamp}.averixor-backup`);
       markBackupDone();
-      setStatus(`Зашифрований бэкап: ${manifest.recordCount} записів`);
+      setStatus(`Зашифрована резервна копія: ${manifest.recordCount} записів`);
     } catch (err) {
       reportError('backup', err);
     }
@@ -205,7 +222,7 @@
     await refreshTree();
     const msg = mode === 'merge-missing'
       ? `Додано ${result.added} записів (пропущено ${result.skipped})`
-      : `Відновлено ${manifest.recordCount} записів з бэкапу`;
+      : `Відновлено ${manifest.recordCount} записів з резервної копії`;
     setStatus(msg);
   }
 
@@ -231,7 +248,13 @@
 
   function reportError(scope, err) {
     console.error(`[workspace:${scope}]`, err);
-    setStatus(`Помилка: ${err.message || err}`);
+    const msg = err?.message || String(err);
+    setStatus(`Помилка: ${msg}`);
+    const alertEl = $('ws-error-alert');
+    if (alertEl) {
+      alertEl.hidden = false;
+      alertEl.textContent = msg;
+    }
   }
 
   async function refreshTree() {
@@ -248,7 +271,7 @@
       up.type = 'button';
       up.className = 'ws-file-item is-folder';
       up.innerHTML = `<span class="ws-file-icon">⬆️</span><span>..</span>`;
-      up.onclick = () => navigateUp();
+      up.onclick = safeAsync(() => navigateUp());
       els.fileTree.appendChild(up);
     }
 
@@ -257,10 +280,18 @@
       btn.type = 'button';
       btn.className = `ws-file-item ${item.kind === 'folder' ? 'is-folder' : ''} ${state.activeTab === item.id ? 'is-active' : ''}`;
       btn.dataset.id = item.id;
+      if (state.activeTab === item.id) btn.setAttribute('aria-current', 'true');
       btn.innerHTML = `<span class="ws-file-icon">${iconFor(item.kind)}</span><span>${escapeHtml(item.name)}</span>`;
-      btn.onclick = () => openItem(item);
+      btn.onclick = safeAsync(() => openItem(item));
       els.fileTree.appendChild(btn);
     });
+
+    if (items.length === 0 && state.cwd === ROOT_ID) {
+      const empty = document.createElement('p');
+      empty.className = 'ws-tree-empty';
+      empty.textContent = 'Папка порожня. Створіть документ або імпортуйте файл.';
+      els.fileTree.appendChild(empty);
+    }
     } catch (err) {
       reportError('refreshTree', err);
     }
@@ -297,17 +328,30 @@
   }
 
   async function openFile(id) {
-    const file = await state.fs.get(id);
-    if (!file) return;
+    try {
+      const file = await state.fs.get(id);
+      if (!file) return;
 
-    if (!state.openTabs.includes(id)) {
-      state.openTabs.push(id);
+      if (!state.openTabs.includes(id)) {
+        state.openTabs.push(id);
+      }
+      state.activeTab = id;
+      await renderTabs();
+      await showEditor(file);
+      await refreshTree();
+      els.fileName.value = file.name;
+    } catch (err) {
+      if (err?.code === 'LOCKED') {
+        try {
+          await ensureUnlocked();
+          return openFile(id);
+        } catch (unlockErr) {
+          reportError('open', unlockErr);
+        }
+        return;
+      }
+      reportError('open', err);
     }
-    state.activeTab = id;
-    await renderTabs();
-    await showEditor(file);
-    await refreshTree();
-    els.fileName.value = file.name;
   }
 
   async function renderTabs() {
@@ -328,7 +372,7 @@
             closeTab(e.target.dataset.close);
             return;
           }
-          openFile(id);
+          safeAsync(() => openFile(id))();
         };
         els.tabs.appendChild(tab);
       }
@@ -338,16 +382,34 @@
   }
 
   function closeTab(id) {
+    if (state.dirty && state.activeTab === id) {
+      if (!confirm('Є незбережені зміни. Закрити без збереження?')) return;
+      state.dirty = false;
+    }
     state.openTabs = state.openTabs.filter((t) => t !== id);
     if (state.activeTab === id) {
       state.activeTab = state.openTabs[state.openTabs.length - 1] || null;
-      if (state.activeTab) openFile(state.activeTab);
+      if (state.activeTab) void openFile(state.activeTab);
       else showWelcome();
     }
     void renderTabs();
   }
 
+  function detachWsDirtyListener() {
+    if (onWsDirty) {
+      document.removeEventListener('ws-dirty', onWsDirty);
+      onWsDirty = null;
+    }
+  }
+
+  function attachWsDirtyListener() {
+    detachWsDirtyListener();
+    onWsDirty = markDirty;
+    document.addEventListener('ws-dirty', onWsDirty);
+  }
+
   function hideAllPanes() {
+    detachWsDirtyListener();
     els.editorArea.querySelectorAll('.ws-editor-pane').forEach((p) => p.classList.remove('is-active'));
     DocumentEditor.destroy();
     SpreadsheetEditor.destroy();
@@ -367,6 +429,7 @@
   }
 
   async function showEditor(file) {
+    try {
     hideAllPanes();
     const pane = getOrCreatePane(file.id);
     pane.classList.add('is-active');
@@ -383,9 +446,7 @@
       case 'spreadsheet':
         SpreadsheetEditor.mount(pane);
         SpreadsheetEditor.load(content, file.id);
-        setTimeout(() => {
-          document.addEventListener('ws-dirty', markDirty);
-        }, 100);
+        setTimeout(() => attachWsDirtyListener(), 100);
         break;
       case 'presentation':
         PresentationEditor.mount(pane);
@@ -400,7 +461,7 @@
           data = await blob.arrayBuffer();
         }
         await PdfEditor.load(data);
-        document.addEventListener('ws-dirty', markDirty);
+        attachWsDirtyListener();
         break;
       }
       case 'zip':
@@ -414,7 +475,10 @@
       }
       default:
         pane.innerHTML = `<div class="ws-preview"><p>📎 ${escapeHtml(file.name)}</p><p>Завантажте файл для перегляду на пристрої.</p><button type="button" class="button button-primary" id="ws-dl-binary">Завантажити</button></div>`;
-        $('ws-dl-binary').onclick = () => downloadFile(file.id);
+        $('ws-dl-binary').onclick = safeAsync(() => downloadFile(file.id));
+    }
+    } catch (err) {
+      reportError('editor', err);
     }
   }
 
@@ -798,22 +862,22 @@
   }
 
   function bindUi() {
-    els.saveBtn.onclick = () => saveCurrent();
-    els.exportBtn.onclick = () => exportCurrent();
-    els.exportAllBtn.onclick = () => exportAll();
+    els.saveBtn.onclick = safeAsync(() => saveCurrent());
+    els.exportBtn.onclick = safeAsync(() => exportCurrent());
+    els.exportAllBtn.onclick = safeAsync(() => exportAll());
     els.encryptedBackupBtn.onclick = () => exportEncryptedBackup();
     els.restoreBtn.onclick = () => openRestoreWizard();
-    els.encryptBtn.onclick = () => enableEncryptionFlow().catch((e) => reportError('encrypt', e));
+    els.encryptBtn.onclick = safeAsync(() => enableEncryptionFlow());
     els.importBtn.onclick = () => els.fileInput.click();
     els.fileInput.onchange = (e) => {
-      if (e.target.files.length) handleImport(e.target.files);
+      if (e.target.files.length) safeAsync(() => handleImport(e.target.files))();
       e.target.value = '';
     };
-    els.newDoc.onclick = () => createNew('document');
-    els.newSheet.onclick = () => createNew('spreadsheet');
-    els.newSlides.onclick = () => createNew('presentation');
-    els.newFolder.onclick = () => createNew('folder');
-    els.deleteBtn.onclick = () => deleteSelected();
+    els.newDoc.onclick = safeAsync(() => createNew('document'));
+    els.newSheet.onclick = safeAsync(() => createNew('spreadsheet'));
+    els.newSlides.onclick = safeAsync(() => createNew('presentation'));
+    els.newFolder.onclick = safeAsync(() => createNew('folder'));
+    els.deleteBtn.onclick = safeAsync(() => deleteSelected());
     els.fileName.onchange = markDirty;
 
     window.addEventListener('beforeunload', (e) => {
@@ -826,7 +890,7 @@
     document.addEventListener('keydown', (e) => {
       if ((e.ctrlKey || e.metaKey) && e.key === 's') {
         e.preventDefault();
-        saveCurrent();
+        safeAsync(() => saveCurrent())();
       }
     });
   }
@@ -871,7 +935,7 @@
     $('ws-backup-now')?.addEventListener('click', () => exportEncryptedBackup());
     $('ws-backup-plain')?.addEventListener('click', () => exportAll());
     $('ws-backup-dismiss')?.addEventListener('click', () => {
-      markBackupDone();
+      snoozeBackupBanner();
     });
     $('ws-restore-close')?.addEventListener('click', closeRestoreWizard);
     $('ws-restore-cancel')?.addEventListener('click', closeRestoreWizard);
