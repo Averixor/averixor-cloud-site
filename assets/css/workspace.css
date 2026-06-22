@@ -1,19 +1,19 @@
 /* Averixor Cloud — вбудоване офісне робоче середовище */
 
-.workspace-app {
-  --ws-sidebar: 272px;
+.workspace-app.app-shell {
+  --ws-sidebar: 280px;
   --ws-bg: #080c18;
   --ws-panel: rgba(255, 255, 255, 0.055);
   --ws-panel-hover: rgba(255, 255, 255, 0.09);
   --ws-line: rgba(255, 255, 255, 0.1);
   --ws-line-strong: rgba(255, 255, 255, 0.16);
-  --ws-glow: rgba(125, 211, 252, 0.22);
   --ws-ease: cubic-bezier(0.22, 1, 0.36, 1);
   --ws-duration: 220ms;
   position: relative;
   display: grid;
-  grid-template-rows: auto 1fr;
-  min-height: 100vh;
+  grid-template-columns: var(--ws-sidebar) minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
+  min-height: 100dvh;
   color: var(--text);
   background:
     radial-gradient(circle at 10% 0%, rgba(56, 189, 248, 0.14), transparent 42%),
@@ -82,45 +82,74 @@ body.workspace-body {
   }
 }
 
-/* ── Top bar ── */
-.ws-topbar {
-  display: grid;
-  gap: 10px;
-  padding: 12px 18px 14px;
-  background: rgba(8, 12, 24, 0.88);
+/* ── App shell: header spans full width; sidebar + main below ── */
+.app-header {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  min-width: 0;
+  background: rgba(8, 12, 24, 0.92);
   border-bottom: 1px solid var(--ws-line);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(18px) saturate(130%);
   -webkit-backdrop-filter: blur(18px) saturate(130%);
 }
 
-.ws-topbar__head,
-.ws-topbar__edit,
-.ws-topbar__tools {
+.workspace-toolbar {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  min-width: 0;
-}
-
-.ws-topbar__head {
-  justify-content: space-between;
-}
-
-.ws-topbar__edit {
   flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+  padding: 12px 18px;
 }
 
-.ws-topbar__tools {
-  flex-wrap: nowrap;
+.workspace-toolbar__sep {
+  flex: 0 0 1px;
+  align-self: stretch;
+  width: 1px;
+  min-height: 28px;
+  margin-inline: 2px;
+  background: var(--ws-line);
+}
+
+.workspace-toolbar__end {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   gap: 8px;
-  padding-top: 2px;
-  overflow-x: auto;
-  scrollbar-width: none;
+  margin-left: auto;
 }
 
-.ws-topbar__tools::-webkit-scrollbar {
-  display: none;
+.workspace-toolbar button,
+.workspace-toolbar a {
+  position: static;
+  flex: 0 0 auto;
+}
+
+.cloud-open-button {
+  position: static !important;
+  transform: none !important;
+  margin: 0;
+}
+
+.workspace-sidebar,
+.ws-sidebar {
+  grid-column: 1;
+  grid-row: 2;
+  min-width: 0;
+  min-height: 0;
+}
+
+.workspace-main,
+.ws-main {
+  grid-column: 2;
+  grid-row: 2;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
 }
 
 .ws-brand {
@@ -139,9 +168,9 @@ body.workspace-body {
 }
 
 .ws-file-name {
-  flex: 1 1 200px;
-  min-width: 160px;
-  max-width: 420px;
+  flex: 1 1 140px;
+  min-width: 120px;
+  max-width: 280px;
   padding: 9px 14px;
   color: var(--text);
   font-size: 0.88rem;
@@ -186,11 +215,11 @@ body.workspace-body {
 }
 
 .ws-btn:hover {
-  transform: translateY(-1px);
+  filter: brightness(1.06);
 }
 
 .ws-btn:active {
-  transform: translateY(0);
+  filter: brightness(0.98);
 }
 
 .ws-btn--primary {
@@ -301,32 +330,21 @@ body.workspace-body {
   white-space: nowrap;
   background: linear-gradient(180deg, #9fe4ff, #7dd3fc);
   border-radius: 999px;
-  box-shadow: 0 8px 24px rgba(56, 189, 248, 0.24);
-  transition: transform var(--ws-duration) var(--ws-ease), box-shadow var(--ws-duration) ease;
+  box-shadow: 0 4px 16px rgba(56, 189, 248, 0.2);
 }
 
 .ws-cloud-cta:hover {
   color: #041018;
-  box-shadow: 0 10px 28px rgba(56, 189, 248, 0.32);
-  transform: translateY(-1px);
-}
-
-.ws-layout {
-  display: grid;
-  grid-template-columns: var(--ws-sidebar) 1fr;
-  grid-template-rows: auto 1fr;
-  min-height: 0;
-  overflow: hidden;
+  filter: brightness(1.05);
 }
 
 .ws-disclaimer {
-  grid-column: 1 / -1;
-  padding: 11px 20px;
+  padding: 10px 18px;
   color: var(--muted);
   font-size: 0.81rem;
   line-height: 1.55;
   background: linear-gradient(90deg, rgba(125, 211, 252, 0.09), rgba(125, 211, 252, 0.04));
-  border-bottom: 1px solid rgba(125, 211, 252, 0.14);
+  border-top: 1px solid rgba(125, 211, 252, 0.12);
 }
 
 .ws-disclaimer strong {
@@ -339,15 +357,13 @@ body.workspace-body {
 }
 
 .ws-backup-banner {
-  grid-column: 1 / -1;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 10px;
-  padding: 12px 16px;
+  padding: 10px 18px;
   background: rgba(251, 191, 36, 0.12);
-  border: 1px solid rgba(251, 191, 36, 0.35);
-  border-radius: 12px;
+  border-top: 1px solid rgba(251, 191, 36, 0.28);
   font-size: 0.85rem;
   color: var(--text);
 }
@@ -357,11 +373,9 @@ body.workspace-body {
 }
 
 .ws-error-alert {
-  grid-column: 1 / -1;
-  padding: 10px 14px;
-  border-radius: 8px;
+  padding: 10px 18px;
+  border-top: 1px solid rgba(239, 68, 68, 0.35);
   background: rgba(239, 68, 68, 0.15);
-  border: 1px solid rgba(239, 68, 68, 0.45);
   color: #fecaca;
   font-size: 0.92rem;
 }
@@ -540,7 +554,7 @@ body.workspace-body {
   gap: 14px;
   min-height: 0;
   padding: 16px 14px 14px;
-  overflow: hidden;
+  overflow-y: auto;
   background: rgba(0, 0, 0, 0.18);
   border-right: 1px solid var(--ws-line);
 }
@@ -668,13 +682,6 @@ body.workspace-body {
 .ws-cloud-note a {
   color: var(--accent);
   font-weight: 800;
-}
-
-.ws-main {
-  display: grid;
-  grid-template-rows: auto 1fr;
-  min-height: 0;
-  overflow: hidden;
 }
 
 .ws-tabs {
@@ -1061,20 +1068,9 @@ body.workspace-body {
   font-weight: 800;
 }
 
-@media (max-width: 900px) {
-  .ws-topbar {
-    padding-inline: 14px;
-  }
-
-  .ws-topbar__head {
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  .ws-topbar__head .ws-status {
-    order: 3;
-    width: 100%;
-    justify-content: flex-end;
+@media (max-width: 1100px) {
+  .workspace-toolbar__sep {
+    display: none;
   }
 
   .ws-file-name {
@@ -1082,19 +1078,35 @@ body.workspace-body {
     max-width: none;
   }
 
-  .ws-welcome-cards {
+  .workspace-toolbar__end {
+    flex: 1 1 100%;
+    justify-content: flex-end;
+  }
+}
+
+@media (max-width: 900px) {
+  .workspace-app.app-shell {
     grid-template-columns: 1fr;
+    grid-template-rows: auto auto minmax(0, 1fr);
   }
 
-  .ws-layout {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr;
-  }
-
+  .workspace-sidebar,
   .ws-sidebar {
-    max-height: 220px;
+    grid-column: 1;
+    grid-row: 2;
+    max-height: 240px;
     border-right: 0;
     border-bottom: 1px solid var(--ws-line);
+  }
+
+  .workspace-main,
+  .ws-main {
+    grid-column: 1;
+    grid-row: 3;
+  }
+
+  .ws-welcome-cards {
+    grid-template-columns: 1fr;
   }
 
   .ws-slides-editor {
@@ -1112,7 +1124,10 @@ body.workspace-body {
 @media (max-width: 680px) {
   .workspace-app .ws-btn,
   .workspace-app .ws-cloud-cta,
-  .workspace-app .button {
+  .workspace-app .cloud-open-button,
+  .workspace-app .button,
+  .workspace-toolbar button,
+  .workspace-toolbar a {
     width: auto !important;
     max-width: none !important;
   }

@@ -9,7 +9,7 @@
   <meta name="theme-color" content="#080c18" />
   <link rel="icon" type="image/svg+xml" href="../assets/img/icons/favicon.svg" />
   <link rel="stylesheet" href="../assets/css/main.css" />
-  <link rel="stylesheet" href="../assets/css/workspace.css?v=20250622" />
+  <link rel="stylesheet" href="../assets/css/workspace.css?v=20250622b" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..900&display=swap" rel="stylesheet" />
@@ -20,32 +20,28 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jspreadsheet-ce@4.13.4/dist/jspreadsheet.min.css" integrity="sha384-VXAqTITvDFhXyHlEojivmPCcOBEe1w0//seVpdNdHodz2xI6uhOIXQghZ9O4XPm8" crossorigin="anonymous" />
 </head>
 <body class="workspace-body">
-  <div class="workspace-app" id="workspace-app">
-    <header class="ws-topbar">
-      <div class="ws-topbar__head">
+  <div class="workspace-app app-shell" id="workspace-app">
+    <header class="app-header">
+      <div class="workspace-toolbar">
         <a class="brand ws-brand" href="../index.html" aria-label="На головну">
           <span class="brand-mark" aria-hidden="true">☁️</span>
           <span class="brand-text">Averixor Cloud</span>
         </a>
-        <span class="ws-status" id="ws-status" role="status" aria-live="polite">Завантаження…</span>
-        <a class="ws-cloud-cta" href="https://cloud.averixor.xyz/" id="ws-open-cloud" rel="noopener noreferrer" data-cloud-url="https://cloud.averixor.xyz/">Відкрити хмару ↗</a>
-      </div>
-      <div class="ws-topbar__edit">
         <input type="text" class="ws-file-name" id="ws-file-name" placeholder="Назва файлу" aria-label="Назва файлу" />
         <button type="button" class="ws-btn ws-btn--primary" id="ws-save" aria-label="Зберегти файл">Зберегти</button>
         <button type="button" class="ws-btn ws-btn--ghost" id="ws-export" aria-label="Експортувати файл">Експорт</button>
-      </div>
-      <div class="ws-topbar__tools">
+        <span class="workspace-toolbar__sep" aria-hidden="true"></span>
         <button type="button" class="ws-btn ws-btn--tool" id="ws-export-all" title="Незашифрований ZIP (демо)" aria-label="Експорт усіх файлів у ZIP">ZIP</button>
         <button type="button" class="ws-btn ws-btn--tool" id="ws-encrypted-backup" title="Argon2id + AES-256-GCM" aria-label="Зашифрована резервна копія">Резервна копія</button>
         <button type="button" class="ws-btn ws-btn--tool" id="ws-restore" title="Відновити з .averixor-backup" aria-label="Відновити з резервної копії">Відновити</button>
         <button type="button" class="ws-btn ws-btn--tool" id="ws-encrypt" title="Шифрування IndexedDB на пристрої" aria-label="Шифрування сховища">Сховище</button>
         <button type="button" class="ws-btn ws-btn--tool" id="ws-import" aria-label="Імпорт файлів">Імпорт</button>
         <button type="button" class="ws-btn ws-btn--tool ws-btn--danger" id="ws-delete" title="Видалити файл" aria-label="Видалити файл">Видалити</button>
+        <div class="workspace-toolbar__end">
+          <span class="ws-status" id="ws-status" role="status" aria-live="polite">Завантаження…</span>
+          <a class="ws-cloud-cta cloud-open-button" href="https://cloud.averixor.xyz/" id="ws-open-cloud" rel="noopener noreferrer" data-cloud-url="https://cloud.averixor.xyz/">Відкрити хмару ↗</a>
+        </div>
       </div>
-    </header>
-
-    <div class="ws-layout">
       <div class="ws-disclaimer" role="note">
         <strong>Локальний демо-офіс.</strong> Файли зберігаються лише в цьому браузері (IndexedDB). Це <em>не</em> Nextcloud і не Nextcloud Office. Щоб зберегти файл у хмарі — експортуйте його й завантажте на <a href="https://cloud.averixor.xyz/">cloud.averixor.xyz</a>.
       </div>
@@ -56,7 +52,9 @@
         <button type="button" class="button button-secondary" id="ws-backup-dismiss">Нагадати пізніше</button>
       </div>
       <div class="ws-error-alert" id="ws-error-alert" hidden role="alert"></div>
-      <aside class="ws-sidebar" aria-label="Файли">
+    </header>
+
+    <aside class="workspace-sidebar ws-sidebar" aria-label="Файли">
         <div>
           <h2 id="ws-tree-title">Локальні файли</h2>
           <div class="ws-new-grid">
@@ -76,11 +74,10 @@
         </div>
       </aside>
 
-      <div class="ws-main">
-        <div class="ws-tabs" id="ws-tabs" role="tablist" aria-label="Відкриті файли"></div>
-        <div class="ws-editor-area" id="ws-editor-area"></div>
-      </div>
-    </div>
+    <main class="workspace-main ws-main">
+      <div class="ws-tabs" id="ws-tabs" role="tablist" aria-label="Відкриті файли"></div>
+      <div class="ws-editor-area" id="ws-editor-area"></div>
+    </main>
   </div>
 
   <input type="file" class="ws-hidden-input" id="ws-file-input" multiple accept=".doc,.docx,.odt,.xls,.xlsx,.ods,.csv,.pdf,.zip,.txt,.md,.png,.jpg,.jpeg,.gif,.webp,.json,.xml,.rtf" />
