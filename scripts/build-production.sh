@@ -33,4 +33,20 @@ for name in "${FORBIDDEN_NAMES[@]}"; do
 done
 
 COUNT=$(find "$DIST" -type f | wc -l)
+# Cloudflare Pages headers
+if [ -f "$ROOT/_headers" ]; then
+  cp "$ROOT/_headers" "$DIST/_headers"
+else
+  echo "FAIL: missing _headers" >&2
+  exit 1
+fi
+
+# Public integration contract for site ↔ Nextcloud
+if [ -f "$ROOT/.well-known/averixor-cloud.json" ]; then
+  mkdir -p "$DIST/.well-known"
+  cp "$ROOT/.well-known/averixor-cloud.json" "$DIST/.well-known/averixor-cloud.json"
+else
+  echo "FAIL: missing .well-known/averixor-cloud.json" >&2
+  exit 1
+fi
 echo "OK: production build → dist/ ($COUNT файлів)"

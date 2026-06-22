@@ -1,0 +1,18 @@
+{
+  "site": "https://averixor.xyz",
+  "workspace": "https://averixor.xyz/workspace/",
+  "cloud": "https://cloud.averixor.xyz",
+  "login": "https://cloud.averixor.xyz/index.php/login",
+  "endpoints": {
+    "dashboard": "https://cloud.averixor.xyz/index.php/apps/dashboard/",
+    "files": "https://cloud.averixor.xyz/index.php/apps/files/",
+    "webdav": "https://cloud.averixor.xyz/remote.php/dav/files/",
+    "ocsCapabilities": "https://cloud.averixor.xyz/ocs/v2.php/cloud/capabilities"
+  },
+  "features": {
+    "siteAccounts": false,
+    "nextcloudAccounts": true,
+    "sync": false,
+    "sso": false
+  }
+}
