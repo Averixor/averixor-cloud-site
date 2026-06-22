@@ -612,6 +612,24 @@
     return pane;
   }
 
+  function focusEditorArea(file) {
+    requestAnimationFrame(() => {
+      const main = document.querySelector('.workspace-main');
+      const area = els.editorArea;
+      if (main && window.matchMedia('(max-width: 900px)').matches) {
+        main.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      }
+      area?.scrollTo({ top: 0, behavior: 'smooth' });
+      if (file?.kind === 'document' || file?.kind === 'text') {
+        DocumentEditor.quill?.focus();
+      } else if (file?.kind === 'spreadsheet') {
+        area?.querySelector('.jexcel_content')?.focus?.();
+      } else if (file?.kind === 'presentation') {
+        $('ws-slide-title')?.focus();
+      }
+    });
+  }
+
   async function showEditor(file) {
     try {
     assertEditorLib(file.kind);
@@ -664,7 +682,10 @@
     }
     } catch (err) {
       reportError('editor', err);
+      return;
     }
+    focusEditorArea(file);
+    setStatus(`Відкрито: ${file.name}`);
   }
 
   async function showZipView(pane, file) {

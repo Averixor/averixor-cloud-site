@@ -565,27 +565,34 @@ body.workspace-body {
   text-transform: uppercase;
   letter-spacing: 0.14em;
   color: var(--muted-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .ws-new-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
   margin-top: 12px;
 }
 
 .ws-new-btn {
-  padding: 11px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 8px;
   color: var(--muted);
   font-size: 0.78rem;
   font-weight: 750;
+  line-height: 1.2;
   text-align: center;
   cursor: pointer;
   background: var(--ws-panel);
   border: 1px solid var(--ws-line);
   border-radius: 12px;
   transition:
-    transform var(--ws-duration) var(--ws-ease),
     background-color var(--ws-duration) ease,
     color var(--ws-duration) ease,
     border-color var(--ws-duration) ease,
@@ -597,16 +604,18 @@ body.workspace-body {
   background: rgba(125, 211, 252, 0.1);
   border-color: rgba(125, 211, 252, 0.28);
   box-shadow: 0 8px 22px rgba(56, 189, 248, 0.1);
-  transform: translateY(-1px);
 }
 
 .ws-new-btn:active {
-  transform: translateY(0) scale(0.98);
+  filter: brightness(0.96);
 }
 
 .ws-file-tree {
   display: grid;
   gap: 3px;
+  align-content: start;
+  align-items: start;
+  grid-auto-rows: min-content;
   min-height: 0;
   overflow-y: auto;
   padding-right: 4px;
@@ -627,15 +636,19 @@ body.workspace-body {
   display: flex;
   gap: 8px;
   align-items: center;
+  align-self: start;
+  width: 100%;
+  min-height: 40px;
   padding: 9px 11px;
   color: var(--muted);
   font-size: 0.86rem;
   font-weight: 600;
+  line-height: 1.25;
+  text-align: left;
   cursor: pointer;
   border-radius: 11px;
   border: 1px solid transparent;
   transition:
-    transform var(--ws-duration) var(--ws-ease),
     background-color var(--ws-duration) ease,
     color var(--ws-duration) ease,
     border-color var(--ws-duration) ease;
@@ -644,7 +657,6 @@ body.workspace-body {
 .ws-file-item:hover {
   color: var(--text);
   background: var(--ws-panel-hover);
-  transform: translateX(2px);
 }
 
 .ws-file-item.is-active {
@@ -656,6 +668,12 @@ body.workspace-body {
 
 .ws-file-item.is-folder {
   font-weight: 800;
+}
+
+.ws-file-item span:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .ws-file-icon {
@@ -809,6 +827,7 @@ body.workspace-body {
 .ws-welcome-card {
   display: grid;
   gap: 6px;
+  min-height: 118px;
   padding: 18px 18px 16px;
   text-align: left;
   cursor: pointer;
@@ -817,7 +836,6 @@ body.workspace-body {
   border-radius: 16px;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
   transition:
-    transform var(--ws-duration) var(--ws-ease),
     border-color var(--ws-duration) ease,
     box-shadow var(--ws-duration) ease,
     background-color var(--ws-duration) ease;
@@ -828,11 +846,10 @@ body.workspace-body {
   box-shadow:
     0 16px 36px rgba(56, 189, 248, 0.12),
     inset 0 1px 0 rgba(255, 255, 255, 0.06);
-  transform: translateY(-3px);
 }
 
 .ws-welcome-card:active {
-  transform: translateY(-1px) scale(0.995);
+  filter: brightness(0.97);
 }
 
 .ws-welcome-card-icon {
@@ -864,7 +881,7 @@ body.workspace-body {
   display: grid;
   grid-template-rows: auto 1fr;
   height: 100%;
-  min-height: calc(100vh - 110px - 80px);
+  min-height: 0;
 }
 
 .ws-doc-toolbar {
@@ -880,14 +897,21 @@ body.workspace-body {
 
 .ws-doc-editor .ql-container {
   height: auto !important;
-  min-height: 400px;
+  min-height: 280px;
   font-size: 1rem;
   border: 0 !important;
 }
 
 .ws-doc-editor .ql-editor {
-  min-height: 400px;
+  min-height: 280px;
   color: var(--text);
+}
+
+.ws-jexcel-host {
+  width: 100%;
+  height: 100%;
+  min-height: 280px;
+  overflow: auto;
 }
 
 .ql-snow .ql-stroke { stroke: var(--muted) !important; }
@@ -1089,14 +1113,35 @@ body.workspace-body {
 @media (max-width: 900px) {
   .workspace-app.app-shell {
     grid-template-columns: 1fr;
-    grid-template-rows: auto auto minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, auto) minmax(0, 1fr);
+    height: 100dvh;
+    max-height: 100dvh;
+    overflow: hidden;
+  }
+
+  .workspace-toolbar {
+    padding: 8px 12px;
+    gap: 6px 8px;
+  }
+
+  .workspace-toolbar .ws-btn--tool,
+  .workspace-toolbar .ws-cloud-cta {
+    display: none;
+  }
+
+  .ws-brand .brand-text {
+    display: none;
+  }
+
+  .ws-disclaimer {
+    display: none;
   }
 
   .workspace-sidebar,
   .ws-sidebar {
     grid-column: 1;
     grid-row: 2;
-    max-height: 240px;
+    max-height: min(180px, 28dvh);
     border-right: 0;
     border-bottom: 1px solid var(--ws-line);
   }
@@ -1105,6 +1150,11 @@ body.workspace-body {
   .ws-main {
     grid-column: 1;
     grid-row: 3;
+    min-height: 0;
+  }
+
+  .ws-editor-area {
+    scroll-margin-top: 8px;
   }
 
   .ws-welcome-cards {

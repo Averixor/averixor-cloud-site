@@ -96,7 +96,7 @@
         throw new Error('jSpreadsheet не завантажено');
       }
       this.container = container;
-      container.innerHTML = '<div id="ws-jexcel" style="width:100%;height:calc(100vh - 140px);overflow:auto"></div>';
+      container.innerHTML = '<div id="ws-jexcel" class="ws-jexcel-host"></div>';
       this.el = container.querySelector('#ws-jexcel');
     },
 
@@ -122,7 +122,7 @@
         data,
         minDimensions: [12, 8],
         tableOverflow: true,
-        tableHeight: 'calc(100vh - 160px)',
+        tableHeight: '100%',
         onchange: () => document.dispatchEvent(new CustomEvent('ws-dirty')),
       });
     },
