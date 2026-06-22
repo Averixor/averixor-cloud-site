@@ -9,7 +9,7 @@
   <meta name="theme-color" content="#080c18" />
   <link rel="icon" type="image/svg+xml" href="../assets/img/icons/favicon.svg" />
   <link rel="stylesheet" href="../assets/css/main.css" />
-  <link rel="stylesheet" href="../assets/css/workspace.css" />
+  <link rel="stylesheet" href="../assets/css/workspace.css?v=20250622" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..900&display=swap" rel="stylesheet" />
@@ -21,30 +21,27 @@
 </head>
 <body class="workspace-body">
   <div class="workspace-app" id="workspace-app">
-    <header class="ws-toolbar">
-      <div class="ws-toolbar-row ws-toolbar-row--main">
+    <header class="ws-topbar">
+      <div class="ws-topbar__head">
         <a class="brand ws-brand" href="../index.html" aria-label="На головну">
           <span class="brand-mark" aria-hidden="true">☁️</span>
           <span class="brand-text">Averixor Cloud</span>
         </a>
-        <input type="text" class="ws-file-name" id="ws-file-name" placeholder="Назва файлу" aria-label="Назва файлу" />
-        <div class="ws-toolbar-group">
-          <button type="button" class="button button-primary ws-btn" id="ws-save" aria-label="Зберегти файл">💾 Зберегти</button>
-          <button type="button" class="button button-secondary ws-btn" id="ws-export" aria-label="Експортувати файл">⬇️ Експорт</button>
-        </div>
         <span class="ws-status" id="ws-status" role="status" aria-live="polite">Завантаження…</span>
-        <a class="nav-cta ws-cloud-cta" href="https://cloud.averixor.xyz/" id="ws-open-cloud" rel="noopener noreferrer" data-cloud-url="https://cloud.averixor.xyz/">Відкрити хмару ↗</a>
+        <a class="ws-cloud-cta" href="https://cloud.averixor.xyz/" id="ws-open-cloud" rel="noopener noreferrer" data-cloud-url="https://cloud.averixor.xyz/">Відкрити хмару ↗</a>
       </div>
-      <div class="ws-toolbar-row ws-toolbar-row--tools">
-        <span class="ws-tools-label">Інструменти</span>
-        <div class="ws-tools-scroll">
-        <button type="button" class="button button-secondary ws-btn ws-btn--compact" id="ws-export-all" title="Незашифрований ZIP (демо)" aria-label="Експорт усіх файлів у ZIP">📦 Усе в ZIP</button>
-        <button type="button" class="button button-secondary ws-btn ws-btn--compact" id="ws-encrypted-backup" title="Argon2id + AES-256-GCM" aria-label="Зашифрована резервна копія">🔐 Резервна копія</button>
-        <button type="button" class="button button-secondary ws-btn ws-btn--compact" id="ws-restore" title="Відновити з .averixor-backup" aria-label="Відновити з резервної копії">♻️ Відновити</button>
-        <button type="button" class="button button-secondary ws-btn ws-btn--compact" id="ws-encrypt" title="Шифрування IndexedDB на пристрої" aria-label="Шифрування сховища">🔒 Сховище</button>
-        <button type="button" class="button button-secondary ws-btn ws-btn--compact" id="ws-import" aria-label="Імпорт файлів">📥 Імпорт</button>
-        <button type="button" class="button button-secondary ws-btn ws-btn--compact" id="ws-delete" title="Видалити файл" aria-label="Видалити файл">🗑️ Видалити</button>
-        </div>
+      <div class="ws-topbar__edit">
+        <input type="text" class="ws-file-name" id="ws-file-name" placeholder="Назва файлу" aria-label="Назва файлу" />
+        <button type="button" class="ws-btn ws-btn--primary" id="ws-save" aria-label="Зберегти файл">Зберегти</button>
+        <button type="button" class="ws-btn ws-btn--ghost" id="ws-export" aria-label="Експортувати файл">Експорт</button>
+      </div>
+      <div class="ws-topbar__tools">
+        <button type="button" class="ws-btn ws-btn--tool" id="ws-export-all" title="Незашифрований ZIP (демо)" aria-label="Експорт усіх файлів у ZIP">ZIP</button>
+        <button type="button" class="ws-btn ws-btn--tool" id="ws-encrypted-backup" title="Argon2id + AES-256-GCM" aria-label="Зашифрована резервна копія">Резервна копія</button>
+        <button type="button" class="ws-btn ws-btn--tool" id="ws-restore" title="Відновити з .averixor-backup" aria-label="Відновити з резервної копії">Відновити</button>
+        <button type="button" class="ws-btn ws-btn--tool" id="ws-encrypt" title="Шифрування IndexedDB на пристрої" aria-label="Шифрування сховища">Сховище</button>
+        <button type="button" class="ws-btn ws-btn--tool" id="ws-import" aria-label="Імпорт файлів">Імпорт</button>
+        <button type="button" class="ws-btn ws-btn--tool ws-btn--danger" id="ws-delete" title="Видалити файл" aria-label="Видалити файл">Видалити</button>
       </div>
     </header>
 
