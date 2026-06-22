@@ -23,6 +23,9 @@
     container: null,
 
     mount(container) {
+      if (typeof window.Quill !== 'function') {
+        throw new Error('Quill не завантажено');
+      }
       this.container = container;
       container.innerHTML = `
         <div class="ws-doc-editor">
@@ -89,6 +92,9 @@
     el: null,
 
     mount(container) {
+      if (typeof window.jspreadsheet !== 'function') {
+        throw new Error('jSpreadsheet не завантажено');
+      }
       this.container = container;
       container.innerHTML = '<div id="ws-jexcel" style="width:100%;height:calc(100vh - 140px);overflow:auto"></div>';
       this.el = container.querySelector('#ws-jexcel');

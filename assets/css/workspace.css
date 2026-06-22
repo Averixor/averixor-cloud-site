@@ -149,7 +149,7 @@ body.workspace-body {
   grid-template-rows: auto minmax(0, 1fr);
   min-width: 0;
   min-height: 0;
-  overflow: auto;
+  overflow: hidden;
 }
 
 .ws-brand {
@@ -749,20 +749,22 @@ body.workspace-body {
 
 .ws-editor-area {
   position: relative;
+  grid-row: 2;
   min-height: 0;
-  overflow: hidden;
+  height: 100%;
+  overflow: auto;
 }
 
 .ws-editor-pane {
   display: none;
   width: 100%;
-  height: 100%;
   min-height: 0;
   overflow: auto;
 }
 
 .ws-editor-pane.is-active {
   display: block;
+  min-height: 100%;
 }
 
 .ws-welcome {

@@ -401,11 +401,41 @@
   function reportError(scope, err) {
     console.error(`[workspace:${scope}]`, err);
     const msg = err?.message || String(err);
-    setStatus(`Помилка: ${msg}`);
+    setStatus(`Помилка: ${msg}`, 'is-error');
     const alertEl = $('ws-error-alert');
     if (alertEl) {
       alertEl.hidden = false;
       alertEl.textContent = msg;
+    }
+  }
+
+  function checkWorkspaceLibs() {
+    const missing = [];
+    if (typeof window.Quill !== 'function') missing.push('Quill (документи)');
+    if (typeof window.jspreadsheet !== 'function') missing.push('jSpreadsheet (таблиці)');
+    if (typeof window.XLSX === 'undefined') missing.push('SheetJS (імпорт/експорт XLSX)');
+    if (missing.length) {
+      reportError(
+        'libs',
+        new Error(
+          `Не завантажено офісні бібліотеки: ${missing.join(', ')}. Перевірте інтернет або оновіть сторінку (Ctrl+Shift+R).`,
+        ),
+      );
+      return false;
+    }
+    return true;
+  }
+
+  function assertEditorLib(kind) {
+    if (kind === 'document' || kind === 'text') {
+      if (typeof window.Quill !== 'function') {
+        throw new Error('Редактор документів (Quill) не завантажився. Оновіть сторінку.');
+      }
+    }
+    if (kind === 'spreadsheet') {
+      if (typeof window.jspreadsheet !== 'function') {
+        throw new Error('Редактор таблиць (jSpreadsheet) не завантажився. Оновіть сторінку.');
+      }
     }
   }
 
@@ -584,6 +614,7 @@
 
   async function showEditor(file) {
     try {
+    assertEditorLib(file.kind);
     hideAllPanes();
     const pane = getOrCreatePane(file.id);
     pane.classList.add('is-active');
@@ -726,7 +757,7 @@
         </div>`;
       els.editorArea.appendChild(pane);
       pane.querySelectorAll('[data-new]').forEach((btn) => {
-        btn.onclick = () => createNew(btn.dataset.new);
+        btn.onclick = safeAsync(() => createNew(btn.dataset.new));
       });
       pane.querySelector('[data-import]').onclick = () => els.fileInput.click();
     }
@@ -1075,6 +1106,9 @@
 
     await state.fs.init();
     bindUi();
+    if (!checkWorkspaceLibs()) {
+      setStatus('Бібліотеки не завантажені', 'is-error');
+    }
     window.addEventListener('ws-schema-upgrade', () => {
       setStatus('Оновлено схему БД — зробіть «Усе в ZIP» перед роботою');
       const el = $('ws-backup-banner');
