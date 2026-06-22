@@ -16,7 +16,7 @@ const PAGES = [
 test.describe('Marketing site smoke', () => {
   test('homepage has login and registration links', async ({ page }) => {
     await page.goto('/');
-    await expect(page.locator('a[href="https://cloud.averixor.xyz/login"]').first()).toBeVisible();
+    await expect(page.locator('a[href="https://cloud.averixor.xyz/"]').first()).toBeVisible();
     await expect(page.locator('a[href="https://cloud.averixor.xyz/index.php/apps/registration/"]').first()).toBeAttached();
   });
 

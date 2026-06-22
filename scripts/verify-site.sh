@@ -40,8 +40,8 @@ if ! grep -q 'https://averixor.xyz/sitemap.xml' "$DIST/robots.txt"; then
   fail=1
 fi
 
-if ! grep -q 'cloud.averixor.xyz/login' "$DIST/index.html"; then
-  echo "WARN: index.html login URL check (cloud.averixor.xyz/login)" >&2
+if ! grep -q 'cloud.averixor.xyz/' "$DIST/index.html"; then
+  echo "WARN: index.html cloud URL check (cloud.averixor.xyz/)" >&2
 fi
 
 for asset in assets/img/og-image.png assets/img/icons/apple-touch-icon.png assets/img/icons/icon-192.png assets/img/icons/icon-512.png assets/img/icons/favicon.svg; do
@@ -50,6 +50,30 @@ done
 
 if grep -q 'averixor.xyz/workspace/' "$DIST/sitemap.xml" 2>/dev/null; then
   echo "ERROR: workspace/ must not be in sitemap (noindex page)" >&2
+  fail=1
+fi
+
+if grep -R '<script[^>]*https://.*cdn' "$DIST/workspace/index.html" | grep -vq 'integrity='; then
+  echo "WARN: some workspace CDN scripts lack SRI (xlsx etc); versions pinned — review hashes before full release" >&2
+fi
+
+if grep -R 'cdn\.quilljs\.com' "$DIST" 2>/dev/null | grep -q .; then
+  echo "ERROR: cdn.quilljs.com is forbidden (use cdn.jsdelivr.net/npm/quill@1.3.7)" >&2
+  fail=1
+fi
+
+if grep -R 'cloud\.averixor\.xyz/login' "$ROOT" --include='*.html' --include='*.js' 2>/dev/null | grep -vq 'verify-site.sh'; then
+  echo "ERROR: source contains cloud.averixor.xyz/login (use cloud.averixor.xyz/)" >&2
+  fail=1
+fi
+
+if grep -R 'cloud\.averixor\.xyz/login' "$DIST" 2>/dev/null | grep -q .; then
+  echo "ERROR: cloud.averixor.xyz/login links are forbidden (use cloud.averixor.xyz/)" >&2
+  fail=1
+fi
+
+if ! grep -q 'cloud-config\.js' "$DIST/workspace/index.html"; then
+  echo "ERROR: workspace must load assets/js/cloud-config.js" >&2
   fail=1
 fi
 

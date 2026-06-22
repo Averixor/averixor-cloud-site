@@ -251,6 +251,7 @@
             <button type="button" class="button button-secondary" id="ws-pdf-next">→</button>
             <input type="text" id="ws-pdf-annotate" placeholder="Текст для додавання на PDF" style="flex:1;min-width:160px;padding:8px 12px;border-radius:10px;border:1px solid var(--ws-line);background:var(--ws-panel);color:var(--text)">
             <button type="button" class="button button-primary" id="ws-pdf-add-text">Додати текст</button>
+            <button type="button" class="button button-secondary" id="ws-pdf-del-anno" title="Видалити останню анотацію на сторінці">✕</button>
           </div>
           <div class="ws-pdf-canvas-wrap"><canvas id="ws-pdf-canvas"></canvas></div>
         </div>`;
@@ -304,6 +305,18 @@
         this.annotations.push({ page: this.pageNum, text, x: 50, y: 50 });
         this.renderPage();
         document.dispatchEvent(new CustomEvent('ws-dirty'));
+      };
+      const delBtn = document.getElementById('ws-pdf-del-anno');
+      if (delBtn) delBtn.onclick = () => {
+        // remove last anno on current page
+        for (let i = this.annotations.length - 1; i >= 0; i--) {
+          if (this.annotations[i].page === this.pageNum) {
+            this.annotations.splice(i, 1);
+            this.renderPage();
+            document.dispatchEvent(new CustomEvent('ws-dirty'));
+            break;
+          }
+        }
       };
     },
 

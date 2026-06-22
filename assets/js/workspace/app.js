@@ -24,6 +24,7 @@
   const BACKUP_INTERVAL_MS = 7 * 24 * 60 * 60 * 1000;
   const BACKUP_SNOOZE_MS = 24 * 60 * 60 * 1000;
   let onWsDirty = null;
+  let autosaveTimer = null;
 
   function markBackupDone() {
     try { localStorage.setItem(BACKUP_KEY, String(Date.now())); } catch { /* empty */ }
@@ -59,13 +60,159 @@
     };
   }
 
-  async function promptPassword(message) {
-    const pw = window.prompt(message);
-    if (pw === null) return null;
-    if (!pw || pw.length < 8) {
+  // --- Custom modal system (replaces raw window.prompt/confirm for pre-release polish) ---
+  let dialogResolver = null;
+  let dialogCleanup = null;
+
+  function closeDialog(result) {
+    const modal = $('ws-dialog-modal');
+    if (modal) modal.hidden = true;
+    if (dialogCleanup) { dialogCleanup(); dialogCleanup = null; }
+    const res = dialogResolver;
+    dialogResolver = null;
+    if (res) res(result);
+  }
+
+  function showDialog({ title, bodyHTML, actions = [], cancelLabel = 'Скасувати', allowCancel = true }) {
+    return new Promise((resolve) => {
+      const modal = $('ws-dialog-modal');
+      const titleEl = $('ws-dialog-title');
+      const bodyEl = $('ws-dialog-body');
+      const actionsEl = $('ws-dialog-actions');
+      const cancelBtn = $('ws-dialog-cancel');
+      if (!modal || !titleEl || !bodyEl || !actionsEl || !cancelBtn) {
+        // fallback to native if elements missing (should not happen)
+        const r = window.confirm(title + '\n\n' + (bodyHTML || ''));
+        return resolve(r ? (actions[0] && actions[0].value != null ? actions[0].value : true) : null);
+      }
+
+      titleEl.textContent = title || '';
+      bodyEl.innerHTML = bodyHTML || '';
+      actionsEl.innerHTML = '';
+
+      dialogResolver = resolve;
+
+      actions.forEach((act, idx) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = act.primary ? 'button button-primary' : 'button button-secondary';
+        btn.textContent = act.label;
+        btn.onclick = () => {
+          closeDialog(act.value != null ? act.value : true);
+        };
+        actionsEl.appendChild(btn);
+      });
+
+      const onCancel = () => closeDialog(null);
+      cancelBtn.onclick = onCancel;
+      cancelBtn.hidden = !allowCancel;
+
+      const backdrop = $('ws-dialog-backdrop');
+      const onBackdrop = (e) => { if (e.target === backdrop) onCancel(); };
+      if (backdrop) backdrop.addEventListener('click', onBackdrop, { once: true });
+
+      // Keyboard support
+      const onKey = (e) => {
+        if (e.key === 'Escape' && allowCancel) {
+          e.preventDefault();
+          onCancel();
+        }
+        if (e.key === 'Enter' && actions.length) {
+          // activate first primary or first action
+          const primary = actionsEl.querySelector('.button-primary') || actionsEl.querySelector('.button');
+          if (primary) primary.click();
+        }
+      };
+      document.addEventListener('keydown', onKey, { once: true });
+
+      dialogCleanup = () => {
+        if (backdrop) backdrop.removeEventListener('click', onBackdrop);
+        document.removeEventListener('keydown', onKey);
+      };
+
+      modal.hidden = false;
+      // focus first input if any
+      const firstInput = bodyEl.querySelector('input');
+      if (firstInput) setTimeout(() => firstInput.focus(), 0);
+
+      // lightweight strength hint (for password dialogs)
+      const pwInp = bodyEl.querySelector('#ws-dlg-pw1');
+      const strEl = document.getElementById('ws-pw-strength');
+      if (pwInp && strEl) {
+        const update = () => {
+          const v = pwInp.value || '';
+          if (!v) { strEl.textContent = ''; return; }
+          let lvl = 'слабкий';
+          if (v.length >= 16 && /[A-Z]/.test(v) && /\d/.test(v) && /[^A-Za-z0-9]/.test(v)) lvl = 'відмінний';
+          else if (v.length >= 12 && /[A-Z]/.test(v) && /\d/.test(v)) lvl = 'добрий';
+          else if (v.length >= 8) lvl = 'середній';
+          strEl.textContent = `Міцність: ${lvl}`;
+        };
+        pwInp.addEventListener('input', update, { passive: true });
+        update();
+      }
+
+      // attach show/hide toggles while dialog is open (before user submits)
+      bodyEl.querySelectorAll('.ws-pw-toggle').forEach((t) => {
+        t.onclick = () => {
+          const targetId = t.dataset.for;
+          const inp = document.getElementById(targetId);
+          if (inp) inp.type = inp.type === 'password' ? 'text' : 'password';
+          t.textContent = (inp && inp.type === 'text') ? '🙈' : '👁';
+        };
+      });
+    });
+  }
+
+  async function promptPassword(message, { requireConfirm = false, title = 'Введіть пароль' } = {}) {
+    const body = `
+      <p>${escapeHtml(message || 'Введіть пароль (мін. 8 символів):')}</p>
+      <div class="ws-pw-row">
+        <input type="password" id="ws-dlg-pw1" autocomplete="new-password" minlength="8" placeholder="Пароль" />
+        <button type="button" class="ws-pw-toggle" data-for="ws-dlg-pw1" aria-label="Показати пароль">👁</button>
+      </div>
+      <div class="ws-pw-hint" id="ws-pw-strength"></div>
+      ${requireConfirm ? `
+        <div class="ws-pw-row">
+          <input type="password" id="ws-dlg-pw2" autocomplete="new-password" minlength="8" placeholder="Повторіть пароль" />
+          <button type="button" class="ws-pw-toggle" data-for="ws-dlg-pw2" aria-label="Показати пароль">👁</button>
+        </div>
+        <div class="ws-pw-hint">Паролі повинні збігатися</div>
+      ` : ''}
+    `;
+    const res = await showDialog({
+      title,
+      bodyHTML: body,
+      actions: [{ label: 'OK', value: 'submit', primary: true }],
+      allowCancel: true,
+    });
+    if (!res) return null;
+
+    const pw1 = ($('ws-dlg-pw1') || {}).value || '';
+    const pw2 = requireConfirm ? (($('ws-dlg-pw2') || {}).value || '') : pw1;
+
+    if (!pw1 || pw1.length < 8) {
       throw new Error('Пароль має бути не менше 8 символів');
     }
-    return pw;
+    if (requireConfirm && pw1 !== pw2) {
+      throw new Error('Паролі не збігаються');
+    }
+
+    return pw1;
+  }
+
+  async function wsConfirm(message, { danger = false, title = 'Підтвердження' } = {}) {
+    const body = `<p>${escapeHtml(message)}</p>`;
+    const res = await showDialog({
+      title,
+      bodyHTML: body,
+      actions: [
+        { label: danger ? 'Так, продовжити' : 'Так', value: true, primary: !danger },
+        { label: 'Ні', value: false, primary: false }
+      ],
+      allowCancel: true,
+    });
+    return !!res;
   }
 
   async function ensureUnlocked() {
@@ -76,11 +223,10 @@
   }
 
   async function enableEncryptionFlow() {
-    const pw1 = await promptPassword('Новий пароль шифрування (мін. 8 символів):');
+    const pw1 = await promptPassword('Новий пароль шифрування (мін. 8 символів):', { requireConfirm: true, title: 'Увімкнути шифрування' });
     if (!pw1) return;
-    const pw2 = window.prompt('Повторіть пароль:');
-    if (pw1 !== pw2) throw new Error('Паролі не збігаються');
-    if (!confirm('Увімкнути шифрування всіх локальних файлів? Спочатку зробіть резервну копію (🔐).')) return;
+    const ok = await wsConfirm('Увімкнути шифрування всіх локальних файлів? Спочатку зробіть резервну копію (🔐).', { title: 'Шифрування сховища', danger: true });
+    if (!ok) return;
     setStatus('Шифрування…');
     await state.fs.enableEncryption(pw1);
     setStatus('Шифрування увімкнено');
@@ -90,24 +236,24 @@
     try {
       await ensureUnlocked();
       if (state.dirty && state.activeTab) await saveCurrent();
-      const pw1 = await promptPassword('Пароль зашифрованої резервної копії (мін. 8 символів):');
+      const pw1 = await promptPassword('Пароль зашифрованої резервної копії (мін. 8 символів):', { requireConfirm: true, title: 'Зашифрована резервна копія' });
       if (!pw1) return;
-      const pw2 = window.prompt('Повторіть пароль резервної копії:');
-      if (pw1 !== pw2) throw new Error('Паролі не збігаються');
       setStatus('Створення резервної копії Argon2id + AES-256-GCM…');
       const manifestPreview = await window.WorkspaceBackup.buildManifest(state.fs);
       const jsonSize = new TextEncoder().encode(JSON.stringify(manifestPreview)).byteLength;
       const sizeMb = (jsonSize / 1024 / 1024).toFixed(2);
       const limitMb = Math.round(window.WorkspaceSecurity.LIMITS.maxBackupBytes / 1024 / 1024);
-      if (!confirm(
-        `Розмір резервної копії: ~${sizeMb} МБ (${manifestPreview.recordCount} записів).\n`
-        + `Ліміт: ${limitMb} МБ.\n\nПродовжити створення зашифрованої резервної копії?`,
-      )) return;
+      const sizeOk = await wsConfirm(
+        `Розмір резервної копії: ~${sizeMb} МБ (${manifestPreview.recordCount} записів).\nЛіміт: ${limitMb} МБ.\n\nПродовжити створення зашифрованої резервної копії?`,
+        { title: 'Підтвердити створення бэкапу' }
+      );
+      if (!sizeOk) return;
       const suggested = window.WorkspaceCrypto.suggestArgon2Profile();
-      const useFast = confirm(
+      const useFast = await wsConfirm(
         suggested.memory <= 16384
-          ? 'Рекомендуємо швидкий Argon2 (worker, менше навантаження на CPU). OK = швидкий, Скасувати = стандартний'
-          : 'Швидкий Argon2 (менше CPU, трохи слабший)? OK = швидкий, Скасувати = стандартний (64MB, worker)',
+          ? 'Рекомендуємо швидкий Argon2 (worker, менше навантаження на CPU). Так = швидкий, Ні = стандартний'
+          : 'Швидкий Argon2 (менше CPU, трохи слабший)? Так = швидкий, Ні = стандартний (64MB, worker)',
+        { title: 'Профіль Argon2' }
       );
       const kdf = useFast ? window.WorkspaceCrypto.FAST_ARGON2 : window.WorkspaceCrypto.DEFAULT_ARGON2;
       const { blob, manifest } = await state.fs.exportWorkspaceBackup({
@@ -186,20 +332,7 @@
       throw new Error('Введіть пароль бэкапу');
     }
     const mode = getRestoreMode();
-    if (mode === 'replace') {
-      if (!confirm(
-        'УВАГА: режим «Замінити все».\n\n'
-        + 'Усі поточні локальні файли будуть видалені та замінені вмістом бэкапу.\n'
-        + 'Новіші локальні файли будуть втрачені.\n\n'
-        + 'Рекомендуємо спочатку зробити бэкап поточного стану.\n\n'
-        + 'Продовжити?',
-      )) return;
-    } else if (!confirm(
-      'Режим «Лише відсутні».\n\n'
-      + 'Будуть додані записи з бэкапу, яких немає зараз (за id).\n'
-      + 'Існуючі файли не змінюються.\n\n'
-      + 'Продовжити?',
-    )) return;
+    // wizard already presented modes + warning text; proceed directly (no double-confirm)
 
     showRestoreStep('progress');
     const { manifest, result } = await state.fs.importWorkspaceBackup(
@@ -232,18 +365,37 @@
     return document.getElementById(id);
   }
 
-  function setStatus(msg) {
-    if (els.status) els.status.textContent = msg;
+  function setStatus(msg, tone) {
+    if (!els.status) return;
+    els.status.textContent = msg;
+    els.status.classList.remove('is-busy', 'is-ok', 'is-warn', 'is-error');
+    if (tone) els.status.classList.add(tone);
+    else if (/завантаж|шифру|резерв|експорт|імпорт|віднов|збереж/i.test(msg)) els.status.classList.add('is-busy');
+    else if (/готово|збережено/i.test(msg)) els.status.classList.add('is-ok');
+    else if (/незбережен|нагад/i.test(msg)) els.status.classList.add('is-warn');
+    else if (/помилк/i.test(msg)) els.status.classList.add('is-error');
   }
 
   function markDirty() {
     state.dirty = true;
-    setStatus('Є незбережені зміни');
+    setStatus('Є незбережені зміни (автозбереження…)');
+    scheduleAutosave();
   }
 
   function markClean() {
     state.dirty = false;
+    if (autosaveTimer) { clearTimeout(autosaveTimer); autosaveTimer = null; }
     setStatus('Збережено');
+  }
+
+  function scheduleAutosave() {
+    if (autosaveTimer) clearTimeout(autosaveTimer);
+    autosaveTimer = setTimeout(() => {
+      autosaveTimer = null;
+      if (state.dirty && state.activeTab) {
+        saveCurrent().catch((e) => { /* silent autosave fail, manual still works */ });
+      }
+    }, 1500);
   }
 
   function reportError(scope, err) {
@@ -369,7 +521,7 @@
         tab.innerHTML = `${iconFor(file.kind)} ${escapeHtml(file.name)} <span class="ws-tab-close" data-close="${id}" aria-label="Закрити">×</span>`;
         tab.onclick = (e) => {
           if (e.target.dataset.close) {
-            closeTab(e.target.dataset.close);
+            safeAsync(() => closeTab(e.target.dataset.close))();
             return;
           }
           safeAsync(() => openFile(id))();
@@ -381,9 +533,10 @@
     }
   }
 
-  function closeTab(id) {
+  async function closeTab(id) {
     if (state.dirty && state.activeTab === id) {
-      if (!confirm('Є незбережені зміни. Закрити без збереження?')) return;
+      const ok = await wsConfirm('Є незбережені зміни. Закрити без збереження?', { title: 'Закрити вкладку' });
+      if (!ok) return false;
       state.dirty = false;
     }
     state.openTabs = state.openTabs.filter((t) => t !== id);
@@ -393,6 +546,7 @@
       else showWelcome();
     }
     void renderTabs();
+    return true;
   }
 
   function detachWsDirtyListener() {
@@ -560,13 +714,14 @@
       pane.className = 'ws-editor-pane is-active';
       pane.innerHTML = `
         <div class="ws-welcome">
+          <p class="ws-welcome-eyebrow">Локальний демо-офіс</p>
           <h2>Демо-офіс Averixor Cloud</h2>
-          <p>Локальне редагування в браузері (IndexedDB). <strong>Не підключено до Nextcloud.</strong> Імпорт DOCX, XLSX, PDF, ZIP. Експортуйте результат і завантажте в хмару вручну.</p>
+          <p class="ws-welcome-lead">Редагування в браузері · IndexedDB · без Nextcloud. Імпорт DOCX, XLSX, PDF, ZIP — експортуйте й завантажте в хмару вручну.</p>
           <div class="ws-welcome-cards">
-            <button type="button" class="ws-welcome-card" data-new="document"><strong>📄 Документ</strong><span>Текстовий редактор</span></button>
-            <button type="button" class="ws-welcome-card" data-new="spreadsheet"><strong>📊 Таблиця</strong><span>Електронна таблиця</span></button>
-            <button type="button" class="ws-welcome-card" data-new="presentation"><strong>📽️ Презентація</strong><span>Слайди</span></button>
-            <button type="button" class="ws-welcome-card" data-import=""><strong>📥 Імпорт</strong><span>XLSX, CSV, PDF, ZIP…</span></button>
+            <button type="button" class="ws-welcome-card" data-new="document"><span class="ws-welcome-card-icon" aria-hidden="true">📄</span><strong>Документ</strong><span>Текстовий редактор</span></button>
+            <button type="button" class="ws-welcome-card" data-new="spreadsheet"><span class="ws-welcome-card-icon" aria-hidden="true">📊</span><strong>Таблиця</strong><span>Електронна таблиця</span></button>
+            <button type="button" class="ws-welcome-card" data-new="presentation"><span class="ws-welcome-card-icon" aria-hidden="true">📽️</span><strong>Презентація</strong><span>Слайди</span></button>
+            <button type="button" class="ws-welcome-card" data-import=""><span class="ws-welcome-card-icon" aria-hidden="true">📥</span><strong>Імпорт</strong><span>XLSX, CSV, PDF, ZIP…</span></button>
           </div>
         </div>`;
       els.editorArea.appendChild(pane);
@@ -845,9 +1000,10 @@
 
   async function deleteSelected() {
     if (!state.activeTab) return;
-    if (!confirm('Видалити цей файл?')) return;
+    const ok = await wsConfirm('Видалити цей файл? Назва: ' + (els.fileName?.value || ''), { title: 'Видалення файлу', danger: true });
+    if (!ok) return;
     const id = state.activeTab;
-    closeTab(id);
+    await closeTab(id);
     await state.fs.delete(id);
     await refreshTree();
     setStatus('Видалено');
@@ -936,6 +1092,18 @@
     $('ws-backup-plain')?.addEventListener('click', () => exportAll());
     $('ws-backup-dismiss')?.addEventListener('click', () => {
       snoozeBackupBanner();
+    });
+    $('ws-open-cloud')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (typeof window.openAverixorCloud === 'function') {
+        window.openAverixorCloud();
+        return;
+      }
+      const url =
+        e.currentTarget?.dataset?.cloudUrl ||
+        window.AverixorCloudConfig?.url ||
+        'https://cloud.averixor.xyz/';
+      window.open(url, '_blank', 'noopener');
     });
     $('ws-restore-close')?.addEventListener('click', closeRestoreWizard);
     $('ws-restore-cancel')?.addEventListener('click', closeRestoreWizard);

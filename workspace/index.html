@@ -14,36 +14,43 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..900&display=swap" rel="stylesheet" />
   <!-- Quill — документи -->
-  <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css" />
   <!-- jSpreadsheet — таблиці -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsuites@4.9.1/dist/jsuites.min.css" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jspreadsheet-ce@4.13.4/dist/jspreadsheet.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsuites@4.9.1/dist/jsuites.min.css" integrity="sha384-3gUNjZgT0MlOVyIo3levFQOdFPhxO4vf2YQDbGU1AF5Kb95YdY+302AYL35kRzmP" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jspreadsheet-ce@4.13.4/dist/jspreadsheet.min.css" integrity="sha384-VXAqTITvDFhXyHlEojivmPCcOBEe1w0//seVpdNdHodz2xI6uhOIXQghZ9O4XPm8" crossorigin="anonymous" />
 </head>
 <body class="workspace-body">
   <div class="workspace-app" id="workspace-app">
     <header class="ws-toolbar">
-      <a class="brand" href="../index.html" aria-label="На головну">
-        <span class="brand-mark" aria-hidden="true">☁️</span>
-        <span class="brand-text">Averixor Cloud</span>
-      </a>
-      <div class="ws-toolbar-actions">
+      <div class="ws-toolbar-row ws-toolbar-row--main">
+        <a class="brand ws-brand" href="../index.html" aria-label="На головну">
+          <span class="brand-mark" aria-hidden="true">☁️</span>
+          <span class="brand-text">Averixor Cloud</span>
+        </a>
         <input type="text" class="ws-file-name" id="ws-file-name" placeholder="Назва файлу" aria-label="Назва файлу" />
-        <button type="button" class="button button-primary" id="ws-save" aria-label="Зберегти файл">💾 Зберегти</button>
-        <button type="button" class="button button-secondary" id="ws-export" aria-label="Експортувати файл">⬇️ Експорт</button>
-        <button type="button" class="button button-secondary" id="ws-export-all" title="Незашифрований ZIP (демо)" aria-label="Експорт усіх файлів у ZIP">📦 Усе в ZIP</button>
-        <button type="button" class="button button-secondary" id="ws-encrypted-backup" title="Argon2id + AES-256-GCM" aria-label="Зашифрована резервна копія">🔐 Резервна копія</button>
-        <button type="button" class="button button-secondary" id="ws-restore" title="Відновити з .averixor-backup" aria-label="Відновити з резервної копії">♻️ Відновити</button>
-        <button type="button" class="button button-secondary" id="ws-encrypt" title="Шифрування IndexedDB на пристрої" aria-label="Шифрування сховища">🔒 Сховище</button>
-        <button type="button" class="button button-secondary" id="ws-import" aria-label="Імпорт файлів">📥 Імпорт</button>
-        <button type="button" class="button button-secondary" id="ws-delete" title="Видалити файл" aria-label="Видалити файл">🗑️</button>
+        <div class="ws-toolbar-group">
+          <button type="button" class="button button-primary ws-btn" id="ws-save" aria-label="Зберегти файл">💾 Зберегти</button>
+          <button type="button" class="button button-secondary ws-btn" id="ws-export" aria-label="Експортувати файл">⬇️ Експорт</button>
+        </div>
         <span class="ws-status" id="ws-status" role="status" aria-live="polite">Завантаження…</span>
+        <a class="nav-cta ws-cloud-cta" href="https://cloud.averixor.xyz/" id="ws-open-cloud" rel="noopener noreferrer" data-cloud-url="https://cloud.averixor.xyz/">Відкрити хмару ↗</a>
       </div>
-      <a class="nav-cta" href="https://cloud.averixor.xyz/login">Відкрити хмару ↗</a>
+      <div class="ws-toolbar-row ws-toolbar-row--tools">
+        <span class="ws-tools-label">Інструменти</span>
+        <div class="ws-tools-scroll">
+        <button type="button" class="button button-secondary ws-btn ws-btn--compact" id="ws-export-all" title="Незашифрований ZIP (демо)" aria-label="Експорт усіх файлів у ZIP">📦 Усе в ZIP</button>
+        <button type="button" class="button button-secondary ws-btn ws-btn--compact" id="ws-encrypted-backup" title="Argon2id + AES-256-GCM" aria-label="Зашифрована резервна копія">🔐 Резервна копія</button>
+        <button type="button" class="button button-secondary ws-btn ws-btn--compact" id="ws-restore" title="Відновити з .averixor-backup" aria-label="Відновити з резервної копії">♻️ Відновити</button>
+        <button type="button" class="button button-secondary ws-btn ws-btn--compact" id="ws-encrypt" title="Шифрування IndexedDB на пристрої" aria-label="Шифрування сховища">🔒 Сховище</button>
+        <button type="button" class="button button-secondary ws-btn ws-btn--compact" id="ws-import" aria-label="Імпорт файлів">📥 Імпорт</button>
+        <button type="button" class="button button-secondary ws-btn ws-btn--compact" id="ws-delete" title="Видалити файл" aria-label="Видалити файл">🗑️ Видалити</button>
+        </div>
+      </div>
     </header>
 
     <div class="ws-layout">
       <div class="ws-disclaimer" role="note">
-        <strong>Локальний демо-офіс.</strong> Файли зберігаються лише в цьому браузері (IndexedDB). Це <em>не</em> Nextcloud і не Nextcloud Office. Щоб зберегти файл у хмарі — експортуйте його й завантажте на <a href="https://cloud.averixor.xyz/login">cloud.averixor.xyz</a>.
+        <strong>Локальний демо-офіс.</strong> Файли зберігаються лише в цьому браузері (IndexedDB). Це <em>не</em> Nextcloud і не Nextcloud Office. Щоб зберегти файл у хмарі — експортуйте його й завантажте на <a href="https://cloud.averixor.xyz/">cloud.averixor.xyz</a>.
       </div>
       <div class="ws-backup-banner" id="ws-backup-banner" hidden role="alert">
         <span>⚠️ Зробіть резервну копію — без неї файли зникнуть при очищенні кешу.</span>
@@ -55,7 +62,7 @@
       <aside class="ws-sidebar" aria-label="Файли">
         <div>
           <h2 id="ws-tree-title">Локальні файли</h2>
-          <div class="ws-new-grid" style="margin-top:10px">
+          <div class="ws-new-grid">
             <button type="button" class="ws-new-btn" id="ws-new-doc">📄 Документ</button>
             <button type="button" class="ws-new-btn" id="ws-new-sheet">📊 Таблиця</button>
             <button type="button" class="ws-new-btn" id="ws-new-slides">📽️ Слайди</button>
@@ -66,7 +73,7 @@
         <div class="ws-file-actions">
           <p class="ws-cloud-note">
             <strong>Не Nextcloud.</strong> Дані лишаються на цьому пристрої. Для файлів у хмарі —
-            <a href="https://cloud.averixor.xyz/login">увійдіть у Nextcloud</a>
+            <a href="https://cloud.averixor.xyz/">увійдіть у Nextcloud</a>
             (зберігання, синхронізація, обмін).
           </p>
         </div>
@@ -120,19 +127,31 @@
     </div>
   </div>
 
+  <!-- General purpose dialog for password prompts and confirmations (replaces native prompt/confirm) -->
+  <div class="ws-modal" id="ws-dialog-modal" hidden role="dialog" aria-modal="true" aria-labelledby="ws-dialog-title">
+    <div class="ws-modal-backdrop" id="ws-dialog-backdrop"></div>
+    <div class="ws-modal-panel">
+      <h2 id="ws-dialog-title"></h2>
+      <div id="ws-dialog-body" class="ws-dialog-body"></div>
+      <div id="ws-dialog-actions" class="ws-dialog-actions"></div>
+      <button type="button" class="button button-secondary ws-modal-cancel" id="ws-dialog-cancel">Скасувати</button>
+    </div>
+  </div>
+
   <!-- Бібліотеки (версії зафіксовані; crossorigin для SRI-готовності) -->
-  <script src="https://cdn.jsdelivr.net/npm/argon2-browser@1.18.0/dist/argon2-bundled.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/argon2-browser@1.18.0/dist/argon2-bundled.min.js" crossorigin="anonymous" integrity="sha384-XOR3aNvHciLPIf6r+2glkrmbBbLmIJ1EChMXjw8eBKBf8gE0rDq1TyUNuRdorOqi"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.2.4/purify.min.js" crossorigin="anonymous" integrity="sha512-Y1p/STLW/B+l+MPJ5K5OdILMwJa2gMFXXmC/qsyDuGH9uc1MZMUo6/8YQUg9Ut4ns8KGCrCtt+58UwmNFFiVvA==" referrerpolicy="no-referrer"></script>
-  <script src="https://cdn.quilljs.com/1.3.7/quill.min.js" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/jsuites@4.9.1/dist/jsuites.min.js" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/jspreadsheet-ce@4.13.4/dist/index.min.js" crossorigin="anonymous"></script>
-  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jsuites@4.9.1/dist/jsuites.min.js" crossorigin="anonymous" integrity="sha384-0VL1y8bRqHLoaEROpHvZUzkpWDZqLQsCQfc3DTSuDV8S+hG/PdYIayhVuB6jik5A"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspreadsheet-ce@4.13.4/dist/index.min.js" crossorigin="anonymous" integrity="sha384-ODN503YEO1OlHX6lEwduufYy45R5IYvwUaU1fK1Qg0VV3w2kH0OljAIhTI1JdulC"></script>
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js" crossorigin="anonymous" integrity="sha384-EnyY0/GSHQGSxSgMwaIPzSESbqoOLSexfnSMN2AP+39Ckmn92stwABZynq1JyzdT"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" crossorigin="anonymous" integrity="sha512-q+4liFwdPC/bNdhUpZx6aXDx/h77yEQtn4I1slHydcbZK34nLaR3cAeYSJshoxIOq3mjEf7xJE8YWIUHMn+oCQ==" referrerpolicy="no-referrer"></script>
-  <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js" crossorigin="anonymous" integrity="sha384-weMABwrltA6jWR8DDe9Jp5blk+tZQh7ugpCsF3JwSA53WZM9/14PjS5LAJNHNjAI"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" crossorigin="anonymous" integrity="sha512-XMVd28F1oH/O71fzwBnV7HucLxVwtxf26XV8P4wPk26EDxuGZ91N8bsOttmnomcCD3CS5ZMRL50H0GgOHvegtg==" referrerpolicy="no-referrer"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js" crossorigin="anonymous" integrity="sha512-Qlv6VSKh1gDKGoJbnyA5RMXYcvnpIqhO++MhIM2fStMcGT9i2T//tSwYFlcyoRRDcDZ+TYHpH8azBBCyhpSeqw==" referrerpolicy="no-referrer"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.8.0/mammoth.browser.min.js" crossorigin="anonymous" integrity="sha512-wuWo/cLB9W5BsZeyTYLuiTwr+FDlvjQC7C6atr+To7Jk92XHWI7WsImJZiruw7C9bnc8Zg7N0ncQI2Q/B4PQYw==" referrerpolicy="no-referrer"></script>
 
+  <script src="../assets/js/cloud-config.js"></script>
   <script src="../assets/js/workspace/security.js"></script>
   <script src="../assets/js/workspace/crypto.js"></script>
   <script src="../assets/js/workspace/fs.js"></script>
