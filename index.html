@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Averixor Cloud — приватна офісна хмара</title>
-  <meta name="description" content="Averixor Cloud — приватна хмарна платформа на базі Nextcloud: файли, документи, таблиці, календар, синхронізація та безпечний обмін." />
+  <title>Averixor Cloud — приватна хмара</title>
+  <meta name="description" content="Averixor Cloud — приватна хмарна платформа на базі Nextcloud: файли, синхронізація, календар та безпечний обмін." />
   <meta name="author" content="Averixor Cloud" />
   <meta name="robots" content="index,follow,max-image-preview:large" />
   <meta name="theme-color" content="#0b1020" />
@@ -14,12 +14,12 @@
   <meta property="og:locale" content="uk_UA" />
   <meta property="og:site_name" content="Averixor Cloud" />
   <meta property="og:url" content="https://averixor.xyz/" />
-  <meta property="og:title" content="Averixor Cloud — приватна офісна хмара" />
-  <meta property="og:description" content="Файли, документи, таблиці та співпраця в одній приватній хмарі на базі Nextcloud." />
+  <meta property="og:title" content="Averixor Cloud — приватна хмара" />
+  <meta property="og:description" content="Файли, синхронізація та співпраця в одній приватній хмарі на базі Nextcloud." />
   <meta property="og:image" content="https://averixor.xyz/assets/img/og-image.png" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Averixor Cloud — приватна офісна хмара" />
-  <meta name="twitter:description" content="Файли, документи, таблиці та співпраця в одній приватній хмарі." />
+  <meta name="twitter:title" content="Averixor Cloud — приватна хмара" />
+  <meta name="twitter:description" content="Файли, синхронізація та співпраця в одній приватній хмарі." />
   <meta name="twitter:image" content="https://averixor.xyz/assets/img/og-image.png" />
   <link rel="icon" type="image/svg+xml" href="assets/img/icons/favicon.svg" />
   <link rel="apple-touch-icon" sizes="180x180" href="assets/img/icons/apple-touch-icon.png" />
@@ -52,11 +52,9 @@
             <button class="nav-dropdown-toggle" type="button" aria-expanded="false" data-dropdown-toggle aria-controls="nav-products">Можливості</button>
             <ul id="nav-products" class="nav-dropdown">
               <li><a href="pages/files.html">Файли та сховище<small>Папки, синхронізація, обмін</small></a></li>
-              <li><a href="pages/office.html">Документи й таблиці<small>Тексти, електронні таблиці, PDF</small></a></li>
               <li><a href="pages/collaboration.html">Співпраця<small>Календар, контакти, команди</small></a></li>
             </ul>
           </li>
-          <li><a href="workspace/">Демо-офіс</a></li>
           <li><a href="pages/security.html">Безпека</a></li>
           <li><a href="pages/start.html">Почати</a></li>
           <li><a href="pages/help.html">Допомога</a></li>
@@ -72,21 +70,13 @@
         <div class="hero-badge-row">
           <span class="pill pill-accent">Nextcloud · HTTPS</span>
           <span class="pill">Файли в хмарі</span>
-          <span class="pill pill-office">Демо-офіс у браузері</span>
         </div>
-        <h1 id="hero-title">Приватна хмара для файлів і демо-офіс у браузері</h1>
+        <h1 id="hero-title">Приватна хмара для файлів, синхронізації та спільного доступу</h1>
         <p class="page-hero-lead">
-          <strong>cloud.averixor.xyz</strong> — це ваш Nextcloud: сховище, синхронізація, обмін файлами.
-          <strong>Демо-офіс на цьому сайті</strong> — окремий локальний офіс у браузері (IndexedDB):
-          створення, імпорт і експорт документів без зв’язку з хмарою.
+          <strong>cloud.averixor.xyz</strong> — це ваш Nextcloud: сховище, синхронізація, обмін файлами, календар і контакти. Сайт пояснює можливості хмари та швидко веде до входу або реєстрації.
         </p>
-        <div class="notice notice-info" role="note" style="margin-top:22px">
-          <span aria-hidden="true">ℹ️</span>
-          <p><strong>Nextcloud Office вимкнено.</strong> Редагування DOCX/XLSX безпосередньо в хмарі зараз недоступне (додатки richdocuments ламали сервер). У хмарі — зберігання й перегляд; для редагування — демо-офіс на сайті або локальні програми.</p>
-        </div>
         <div class="hero-actions" style="margin-top:28px">
           <a class="button button-primary" href="https://cloud.averixor.xyz/">Увійти в Nextcloud <span aria-hidden="true">→</span></a>
-          <a class="button button-secondary" href="workspace/">Демо-офіс (браузер)</a>
         </div>
       </div>
     </section>
@@ -99,22 +89,10 @@
           <p>Окремі розділи для кожного типу задач. Обирайте потрібний модуль або працюйте з усім одразу в хмарі.</p>
         </div>
         <div class="module-grid">
-          <a class="module-card module-card--office module-card-featured" href="workspace/">
-            <span class="module-card-icon" aria-hidden="true">🖥️</span>
-            <h3>Демо-офіс у браузері</h3>
-            <p>Локальні документи, таблиці, PDF — у IndexedDB цього пристрою. Імпорт/експорт XLSX, DOCX, ZIP. <em>Не підключено до Nextcloud.</em></p>
-            <span class="module-card-link">Відкрити демо-офіс →</span>
-          </a>
           <a class="module-card" href="pages/files.html">
             <span class="module-card-icon" aria-hidden="true">📁</span>
             <h3>Файли та сховище</h3>
             <p>Папки, версії, кошик, публічні посилання, синхронізація з ПК і телефоном.</p>
-            <span class="module-card-link">Детальніше →</span>
-          </a>
-          <a class="module-card module-card--office" href="pages/office.html">
-            <span class="module-card-icon" aria-hidden="true">📄</span>
-            <h3>Документи й таблиці</h3>
-            <p>У хмарі — зберігання файлів. Онлайн-редагування в Nextcloud Office тимчасово вимкнено.</p>
             <span class="module-card-link">Детальніше →</span>
           </a>
           <a class="module-card module-card--collab" href="pages/collaboration.html">
@@ -122,12 +100,6 @@
             <h3>Співпраця</h3>
             <p>Календар, контакти, спільний доступ до папок і координація команди.</p>
             <span class="module-card-link">Детальніше →</span>
-          </a>
-          <a class="module-card" href="pages/office.html#tables">
-            <span class="module-card-icon" aria-hidden="true">📊</span>
-            <h3>Електронні таблиці</h3>
-            <p>У демо-офісі — редагування CSV/XLSX локально. У хмарі — завантаження й синхронізація.</p>
-            <span class="module-card-link">Про таблиці →</span>
           </a>
           <a class="module-card" href="pages/files.html#sync">
             <span class="module-card-icon" aria-hidden="true">🔄</span>
@@ -141,44 +113,6 @@
             <p>HTTPS, паролі, правила обміну та чесні рекомендації щодо приватних даних.</p>
             <span class="module-card-link">Правила →</span>
           </a>
-        </div>
-      </div>
-    </section>
-
-    <section class="section-pad" aria-labelledby="workspace-title">
-      <div class="container workspace-showcase">
-        <div class="split-copy">
-          <p class="eyebrow">Два рівні</p>
-          <h2 id="workspace-title">Хмара Nextcloud і демо-офіс — це різне</h2>
-          <p><strong>Nextcloud</strong> зберігає ваші файли на сервері: папки, синхронізація, посилання, перегляд.<br><strong>Демо-офіс</strong> на сайті — окреме локальне сховище в браузері для чернеток і імпорту/експорту.</p>
-          <ul class="check-list" style="margin-top:18px">
-            <li>Хмара: файли доступні з усіх пристроїв після входу</li>
-            <li>Демо-офіс: файли лише в цьому браузері (IndexedDB)</li>
-            <li>Між ними немає автоматичної синхронізації</li>
-            <li>Щоб зберегти в хмару — експортуйте з демо-офісу й завантажте в Nextcloud</li>
-          </ul>
-          <a class="text-link" href="pages/office.html" style="margin-top:14px">Детальніше про офісні формати →</a>
-        </div>
-        <div class="workspace-mock" aria-hidden="true">
-          <div class="mock-toolbar">
-            <span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-dot"></span>
-            <span class="mock-title">Averixor Cloud — Робочі матеріали</span>
-          </div>
-          <div class="mock-body">
-            <div class="mock-sidebar">
-              <span class="is-active">📁 Усі файли</span>
-              <span>📄 Документи</span>
-              <span>📊 Таблиці</span>
-              <span>🖼️ Медіа</span>
-              <span>📅 Календар</span>
-            </div>
-            <div class="mock-content">
-              <div class="mock-file-row"><span>📄</span><strong>Звіт_2026.odt</strong><em>2 хв тому</em></div>
-              <div class="mock-file-row"><span>📊</span><strong>Бюджет.xlsx</strong><em>вчора</em></div>
-              <div class="mock-file-row"><span>📁</span><strong>Проєкт_Альфа</strong><em>папка</em></div>
-              <div class="mock-file-row"><span>📎</span><strong>Договір.pdf</strong><em>3 дні</em></div>
-            </div>
-          </div>
         </div>
       </div>
     </section>
@@ -252,7 +186,7 @@
         <div class="faq-list" style="margin-top:28px">
           <div class="faq-item">
             <button class="faq-question" type="button" data-faq-toggle aria-expanded="false">Чи можна редагувати Word і Excel у хмарі?</button>
-            <div class="faq-answer"><p><strong>Ні, зараз ні.</strong> Nextcloud Office (Collabora/OnlyOffice) вимкнено — додатки richdocuments ламали сервер. У хмарі можна зберігати й переглядати файли. Для редагування в браузері скористайтеся <a href="workspace/">демо-офісом</a> (локально) або програмами на комп’ютері.</p></div>
+            <div class="faq-answer"><p>Сайт більше не пропонує редактор документів. Averixor Cloud використовується як хмара для зберігання, синхронізації, перегляду та обміну файлами; редагуйте документи у локальних програмах на комп’ютері або телефоні.</p></div>
           </div>
           <div class="faq-item">
             <button class="faq-question" type="button" data-faq-toggle aria-expanded="false">Чи синхронізуються файли з комп’ютера?</button>
@@ -272,7 +206,7 @@
         <div class="cta-banner">
           <div>
             <h2>Готові почати роботу в хмарі?</h2>
-            <p>Створіть акаунт за кілька хвилин і отримайте доступ до файлів, документів і таблиць.</p>
+            <p>Створіть акаунт за кілька хвилин і отримайте доступ до файлів, синхронізації та спільного доступу.</p>
           </div>
           <div class="cta-actions">
             <a class="button button-primary" href="https://cloud.averixor.xyz/index.php/apps/registration/">Зареєструватися</a>
@@ -291,20 +225,18 @@
             <span class="brand-mark" aria-hidden="true">☁️</span>
             <span class="brand-text">Averixor Cloud</span>
           </a>
-          <p>Приватна офісна хмара на базі Nextcloud: файли, документи, таблиці та співпраця.</p>
+          <p>Приватна хмара на базі Nextcloud: файли, синхронізація та співпраця.</p>
         </div>
         <div class="footer-col">
           <h4>Можливості</h4>
           <ul>
             <li><a href="pages/files.html">Файли та сховище</a></li>
-            <li><a href="pages/office.html">Документи й таблиці</a></li>
             <li><a href="pages/collaboration.html">Співпраця</a></li>
           </ul>
         </div>
         <div class="footer-col">
           <h4>Сервіс</h4>
           <ul>
-            <li><a href="workspace/">Демо-офіс</a></li>
             <li><a href="pages/start.html">Як почати</a></li>
             <li><a href="pages/security.html">Безпека</a></li>
             <li><a href="pages/privacy.html">Конфіденційність</a></li>

@@ -19,7 +19,7 @@ check() {
   fi
 }
 
-for path in index.html pages workspace assets robots.txt sitemap.xml site.webmanifest CNAME _headers _redirects .nojekyll README.md LICENSE; do
+for path in index.html pages assets robots.txt sitemap.xml site.webmanifest CNAME _headers _redirects .nojekyll README.md LICENSE; do
   check "$path"
 done
 
@@ -48,17 +48,35 @@ for asset in assets/img/og-image.png assets/img/icons/apple-touch-icon.png asset
   check "$asset"
 done
 
-if grep -q 'averixor.xyz/workspace/' "$DIST/sitemap.xml" 2>/dev/null; then
-  echo "ERROR: workspace/ must not be in sitemap (noindex page)" >&2
-  fail=1
-fi
 
-if grep -R '<script[^>]*https://.*cdn' "$DIST/workspace/index.html" | grep -vq 'integrity='; then
-  echo "WARN: some workspace CDN scripts lack SRI (xlsx etc); versions pinned — review hashes before full release" >&2
-fi
 
 if grep -R 'cdn\.quilljs\.com' "$DIST" 2>/dev/null | grep -q .; then
   echo "ERROR: cdn.quilljs.com is forbidden (use cdn.jsdelivr.net/npm/quill@1.3.7)" >&2
+  fail=1
+fi
+
+if [ -d "$DIST/workspace" ] || [ -d "$DIST/assets/js/workspace" ]; then
+  echo "ERROR: workspace artifacts must not be in dist/" >&2
+  fail=1
+fi
+
+if [ -f "$DIST/pages/office.html" ]; then
+  echo "ERROR: pages/office.html must not be in dist/" >&2
+  fail=1
+fi
+
+if grep -q '"workspace"' "$DIST/.well-known/averixor-cloud.json" 2>/dev/null; then
+  echo "ERROR: .well-known must not reference workspace URL" >&2
+  fail=1
+fi
+
+if ! grep -qE '^/workspace/? ' "$DIST/_redirects" 2>/dev/null; then
+  echo "ERROR: _redirects must redirect /workspace to home" >&2
+  fail=1
+fi
+
+if ! grep -qE '^/pages/office\.html ' "$DIST/_redirects" 2>/dev/null; then
+  echo "ERROR: _redirects must redirect /pages/office.html" >&2
   fail=1
 fi
 
@@ -72,10 +90,6 @@ if grep -R 'cloud\.averixor\.xyz/login' "$DIST" 2>/dev/null | grep -q .; then
   fail=1
 fi
 
-if ! grep -q 'cloud-config\.js' "$DIST/workspace/index.html"; then
-  echo "ERROR: workspace must load assets/js/cloud-config.js" >&2
-  fail=1
-fi
 
 if [ "$fail" -eq 0 ]; then
   echo "OK: verify-site passed for $DIST"

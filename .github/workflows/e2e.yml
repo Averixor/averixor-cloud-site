@@ -1,4 +1,4 @@
-name: E2E - Backup/Restore durability
+name: E2E - Site smoke
 
 on:
   push:

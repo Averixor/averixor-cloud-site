@@ -1,6 +1,6 @@
 # ☁️ Averixor Cloud
 
-Сайт приватної хмари **Nextcloud** + локальний **демо-офіс** у браузері.
+Сайт-обкладинка приватної хмари **Nextcloud**.
 
 | URL | Призначення |
 |---|---|
@@ -9,16 +9,9 @@
 
 ---
 
-## Важливо: два різні продукти
+## Важливо
 
-### Nextcloud (хмара)
-- Зберігання, синхронізація, обмін файлами
-- **Nextcloud Office вимкнено** (richdocuments ламав сервер) — онлайн-редагування DOCX/XLSX у хмарі недоступне
-
-### Демо-офіс (`/workspace/`)
-- Локальні редактори в браузері (Quill, jSpreadsheet, IndexedDB)
-- Імпорт/експорт офісних форматів
-- **Не інтегровано з Nextcloud** — немає автоматичної синхронізації
+Averixor Cloud зараз позиціонується як обкладинка для Nextcloud: зберігання, синхронізація та обмін файлами. Редактор документів на сайті прибрано.
 
 ---
 
@@ -27,10 +20,8 @@
 ```text
 index.html              # Головна
 pages/                  # Розділи сайту
-workspace/index.html    # Демо-офіс
 assets/css/             # Стилі
 assets/js/              # Скрипти сайту
-assets/js/workspace/    # Демо-офіс
 assets/img/             # Зображення та іконки
 CNAME                   # averixor.xyz
 sitemap.xml
@@ -98,7 +89,7 @@ npm run verify   # перевірка структури
 
 ### Що потрапляє на сайт (`dist/`)
 
-`index.html`, `pages/`, `workspace/`, `assets/`, `robots.txt`, `sitemap.xml`, `site.webmanifest`, `CNAME`, `_headers`, `_redirects`, `.nojekyll`, `README.md`, `LICENSE`, `docs/OPERATIONS.md`
+`index.html`, `pages/`, `assets/`, `robots.txt`, `sitemap.xml`, `site.webmanifest`, `CNAME`, `_headers`, `_redirects`, `.nojekyll`, `README.md`, `LICENSE`, `docs/OPERATIONS.md`
 
 **Не потрапляє:** `tests/`, `node_modules/`, `package.json`, `.env*`, Playwright-артефакти.
 
@@ -132,19 +123,15 @@ python3 -m http.server 8080 --directory dist
 
 ---
 
-## Стан (pre-release)
+## Стан
 
-- Сайт і демо-офіс стабільні для демонстрації та легкого використання.
-- **Демо-офіс** — локальний, дані в браузері. Регулярно робіть зашифровані бекапи.
-- Покращено UX: кастомні модали замість prompt/confirm, автозбереження, SRI для більшості залежностей.
-- Обмеження: простий редактор презентацій, базові анотації PDF, немає синхронізації з Nextcloud.
-- Тести (backup/restore, smoke) проходять у CI.
+- Сайт — обкладинка для Nextcloud: навігація, опис можливостей, посилання на вхід і реєстрацію.
+- Демо-офіс (`/workspace/`) та сторінка офісних форматів прибрані; старі URL редіректяться на головну.
+- Smoke-тести Playwright проходять у CI.
 
 ---
 
 ## Тести (Playwright)
-
-Критична цепочка backup → restore:
 
 ```bash
 npm install
@@ -152,7 +139,7 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-Покриває: зашифрований `.averixor-backup`, wipe IndexedDB, atomic restore, merge-missing, UI wizard, негативні кейси (пароль, checksum, ліміт 250 МБ).
+Покриває: завантаження головної та всіх сторінок `pages/`, наявність посилань на хмару, мобільне меню.
 
 CI: `.github/workflows/e2e.yml` (push/PR → `main`).
 

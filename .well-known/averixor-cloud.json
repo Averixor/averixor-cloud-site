@@ -1,6 +1,5 @@
 {
   "site": "https://averixor.xyz",
-  "workspace": "https://averixor.xyz/workspace/",
   "cloud": "https://cloud.averixor.xyz",
   "login": "https://cloud.averixor.xyz/index.php/login",
   "endpoints": {
@@ -12,6 +11,7 @@
   "features": {
     "siteAccounts": false,
     "nextcloudAccounts": true,
+    "onlineOffice": false,
     "sync": false,
     "sso": false
   }

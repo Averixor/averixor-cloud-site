@@ -15,7 +15,7 @@ module.exports = defineConfig({
   },
   webServer: {
     command: 'npm run build && python3 -m http.server 8765 --directory dist',
-    url: 'http://127.0.0.1:8765/workspace/',
+    url: 'http://127.0.0.1:8765/',
     reuseExistingServer: !process.env.CI,
     timeout: 30_000,
   },

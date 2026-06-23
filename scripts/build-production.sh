@@ -14,7 +14,6 @@ copy() {
 
 copy "$ROOT/index.html" "index.html"
 copy "$ROOT/pages" "pages"
-copy "$ROOT/workspace" "workspace"
 copy "$ROOT/assets" "assets"
 
 for f in robots.txt sitemap.xml site.webmanifest CNAME _headers _redirects .nojekyll README.md LICENSE; do

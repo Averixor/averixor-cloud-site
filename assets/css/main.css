@@ -964,10 +964,9 @@ h3 {
   }
 }
 
-/* ── Extended site: office hub, subpages, UI mocks ── */
+/* ── Extended site: subpages and UI mocks ── */
 
 :root {
-  --accent-office: #a78bfa;
   --accent-files: #38bdf8;
   --accent-collab: #34d399;
   --accent-warn: #fbbf24;
@@ -1062,11 +1061,6 @@ h4 {
   border-color: rgba(125, 211, 252, 0.28);
 }
 
-.pill-office {
-  color: #ddd6fe;
-  background: rgba(167, 139, 250, 0.14);
-  border-color: rgba(167, 139, 250, 0.28);
-}
 
 .pill-collab {
   color: #a7f3d0;
@@ -1243,14 +1237,7 @@ h4 {
   font-weight: 900;
 }
 
-.module-card--office::before {
-  background: radial-gradient(circle at 90% 10%, rgba(167, 139, 250, 0.18), transparent 55%);
-}
 
-.module-card--office .module-card-icon {
-  background: rgba(167, 139, 250, 0.14);
-  border-color: rgba(167, 139, 250, 0.28);
-}
 
 .module-card--collab::before {
   background: radial-gradient(circle at 90% 10%, rgba(52, 211, 153, 0.16), transparent 55%);
@@ -1297,14 +1284,14 @@ h4 {
 }
 
 /* Workspace mock UI */
-.workspace-showcase {
+.cloud-showcase {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(300px, 1.1fr);
   gap: clamp(28px, 5vw, 48px);
   align-items: center;
 }
 
-.workspace-mock {
+.cloud-mock {
   padding: 14px;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.04));
   border: 1px solid var(--line);
@@ -1823,7 +1810,7 @@ code {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .workspace-showcase,
+  .cloud-showcase,
   .content-grid {
     grid-template-columns: 1fr;
   }

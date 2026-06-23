@@ -4,7 +4,6 @@ const { test, expect } = require('@playwright/test');
 const PAGES = [
   '/',
   '/pages/files.html',
-  '/pages/office.html',
   '/pages/collaboration.html',
   '/pages/security.html',
   '/pages/start.html',
@@ -40,9 +39,4 @@ test.describe('Marketing site smoke', () => {
     await expect(page.locator('#site-navigation')).toHaveClass(/is-open/);
   });
 
-  test('workspace disclaimer is visible', async ({ page }) => {
-    await page.goto('/workspace/');
-    await expect(page.locator('.ws-disclaimer')).toContainText('не');
-    await expect(page.locator('.ws-disclaimer')).toContainText('Nextcloud');
-  });
 });
