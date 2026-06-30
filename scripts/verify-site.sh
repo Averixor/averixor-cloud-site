@@ -19,7 +19,7 @@ check() {
   fi
 }
 
-for path in index.html pages assets robots.txt sitemap.xml site.webmanifest CNAME _headers _redirects .nojekyll README.md LICENSE; do
+for path in index.html pages privacy assets robots.txt sitemap.xml site.webmanifest CNAME _headers _redirects .nojekyll README.md LICENSE; do
   check "$path"
 done
 
@@ -47,6 +47,8 @@ fi
 for asset in assets/img/og-image.png assets/img/icons/apple-touch-icon.png assets/img/icons/icon-192.png assets/img/icons/icon-512.png assets/img/icons/favicon.svg; do
   check "$asset"
 done
+
+check "privacy/lost-number/index.html"
 
 
 

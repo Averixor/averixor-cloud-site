@@ -39,4 +39,11 @@ test.describe('Marketing site smoke', () => {
     await expect(page.locator('#site-navigation')).toHaveClass(/is-open/);
   });
 
+  test('lost number privacy policy is public', async ({ page }) => {
+    await page.goto('/privacy/lost-number/');
+    await expect(page.locator('h1')).toContainText('Lost Number');
+    await expect(page.locator('article').last().locator('a[href="mailto:rsabergman@gmail.com"]')).toBeVisible();
+    await expect(page.locator('time[datetime="2026-06-30"]')).toBeVisible();
+  });
+
 });
